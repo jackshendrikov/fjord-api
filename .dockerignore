@@ -1,0 +1,16 @@
+.ve
+.idea
+.DS_Store
+.git
+__pycache__
+*.pyc
+*.pyo
+logs
+.coverage
+.env.example
+.gitignore
+.pre-commit-config.yaml
+docker-compose.yml
+Dockerfile
+pyproject.toml
+README.md
