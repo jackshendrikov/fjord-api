@@ -25,6 +25,12 @@ class TaskNotFoundException(BaseInternalException):
     """
 
 
+class InvalidSheetException(BaseInternalException):
+    """
+    Exception raised when the link in payload is inaccessible or does not contain needed columns.
+    """
+
+
 def add_internal_exception_handler(app: FastAPI) -> None:
     """
     Handle all internal exceptions.
