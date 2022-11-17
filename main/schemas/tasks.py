@@ -11,6 +11,12 @@ from main.schemas.common import TranslationBaseModel
 from main.utils.tasks import gen_export_sheet_url
 
 
+class PaginationMeta(BaseModel):
+    total_tasks: int
+    limit: int
+    offset: int
+
+
 class TranslationRunPayload(TranslationBaseModel):
     link: HttpUrl
     columns_to_translate: list[str] = Field(default=["text", "title"])
@@ -60,8 +66,18 @@ class TranslationRunPayload(TranslationBaseModel):
 
 
 class TranslationTask(BaseModel):
-    run_id: str
+    task_id: str
     payload: TranslationRunPayload
     state: TaskState
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime | None = None
+
+
+class TranslationTasksList(BaseModel):
+    tasks: list[TranslationTask]
+    meta: PaginationMeta
+
+
+class TranslationTaskStatus(BaseModel):
+    task_id: str
+    status: str

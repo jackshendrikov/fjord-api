@@ -19,15 +19,12 @@ class ProxyPoolService:
     _crawlers = [cls() for cls in crawler_cls]
 
     async def get_all_proxies(self) -> ProxiesList:
-        """
-        Return all proxies.
-        """
+        """Return all proxies."""
         return await self._proxies_repository.get_all_proxy()
 
     async def get_random_proxy(self) -> Proxy:
-        """
-        Return random proxy.
-        """
+        """Return random proxy."""
+
         proxy = await self._proxies_repository.get_random_proxy()
         if not proxy:
             raise PoolEmptyException(
@@ -36,18 +33,14 @@ class ProxyPoolService:
         return proxy
 
     async def get_proxies_num(self) -> ProxyNumber:
-        """
-        Return number of valid proxies.
-        """
+        """Return number of valid proxies."""
+
         return await self._proxies_repository.count_proxies()
 
     async def find_proxies(self) -> None:
-        """
-        Start fetching new fresh proxies and add them to Redis.
-        """
-        proxies_to_add = asyncio.get_event_loop().run_until_complete(
-            self._find_fresh_proxies()
-        )
+        """Start fetching new fresh proxies and add them to Redis."""
+
+        proxies_to_add = await self._find_fresh_proxies()
         proxies_to_add = [
             self._proxies_repository.set_max_score(proxy=proxy)
             for proxy_packs in proxies_to_add
@@ -61,6 +54,7 @@ class ProxyPoolService:
         """
         Start async proxies scraping for all crawlers and its corresponding URLS.
         """
+
         crawler_tasks = [
             asyncio.create_task(crawler.crawl()) for crawler in self._crawlers
         ]

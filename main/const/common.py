@@ -29,6 +29,7 @@ class TaskState(StrEnum):
     consumed = "CONSUMED"
     ready = "READY"
     error = "ERROR"
+    deleted = "DELETED"
 
 
 DEFAULT_HEADERS = {

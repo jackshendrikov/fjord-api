@@ -47,14 +47,18 @@ class BaseCrawler:
         :param headers: Specific headers for the Request.
         :return: Text response.
         """
-        async with aiohttp.ClientSession(headers=headers) as session:
+        connector = aiohttp.TCPConnector(limit=30)
+        async with aiohttp.ClientSession(
+            headers=headers, connector=connector
+        ) as session:
             logger.info(f"Make `GET` request to: {url}")
             async with session.get(url, timeout=timeout) as r:
                 r.encoding = "utf-8"
                 return await r.text()
 
     async def _process_proxies(self, proxy_list: Iterator[Proxy]) -> list[Proxy]:
-        async with aiohttp.ClientSession() as session:
+        connector = aiohttp.TCPConnector(limit=30)
+        async with aiohttp.ClientSession(connector=connector) as session:
             good_proxies = [
                 asyncio.create_task(self._check_proxy(session, proxy))
                 for proxy in proxy_list
@@ -73,8 +77,8 @@ class BaseCrawler:
                 if settings.log_proxies:
                     logger.info(f"Good proxy: {proxy.string}")
                 return proxy
-        except Exception as e:
-            logger.info(e)
+        # TODO: Replace general Exception
+        except Exception:
             if settings.log_proxies:
                 logger.info(f"Bad proxy: {proxy.string}")
             return None

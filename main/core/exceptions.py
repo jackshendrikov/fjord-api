@@ -21,7 +21,7 @@ class BaseInternalException(Exception):
 
 class TaskNotFoundException(BaseInternalException):
     """
-    Exception raised when `run_id` field from JSON body not found.
+    Exception raised when `task_id` field from JSON body not found.
     """
 
 

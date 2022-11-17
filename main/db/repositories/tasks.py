@@ -60,9 +60,9 @@ class BaseTasksRepository(BaseMongoRepository):
         found_tasks = self.connection.find(filter=query, limit=limit)
         return [TranslationTask(**task) for task in found_tasks]
 
-    def update_task_field(self, run_id: str, **values: Any) -> None:
+    def update_task_field(self, task_id: str, **values: Any) -> None:
         """Update specific task field with new value"""
-        query = {"task_id": run_id}
+        query = {"task_id": task_id}
         self.connection.update_one(
             filter=query, update={"$set": {**values, "updated_at": datetime.now()}}
         )
@@ -75,10 +75,3 @@ class TranslationTasksRepository(BaseTasksRepository):
 
     db = settings.mongo_db
     collection = settings.mongo_tasks_collection
-
-
-def get_tasks_repository() -> BaseTasksRepository:
-    """
-    Return Task Repository class.
-    """
-    return TranslationTasksRepository()

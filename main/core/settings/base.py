@@ -72,6 +72,10 @@ class BaseAppSettings(BaseSettings):
     proxy_score_max = 1
     proxy_score_min = 0
     proxy_score_init = 1
+    proxy_service_max_page = 2
+
+    # Mongo Extra settings
+    default_pagination_limit = 10
 
     class Config:
         env_file = ".env"

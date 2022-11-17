@@ -2,10 +2,11 @@ from collections.abc import Iterator
 
 from pyquery import PyQuery as pq
 
-from main.const.proxies import PROXY_SERVICE_MAX_PAGE
+from main.core.config import get_app_settings
 from main.schemas.proxies import Proxy
 from main.services.proxies.crawlers import BaseCrawler
 
+settings = get_app_settings()
 base_url = "https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-{page}/"
 
 
@@ -15,7 +16,10 @@ class ProxyListPlusCrawler(BaseCrawler):
     Website: https://list.proxylistplus.com
     """
 
-    urls = [base_url.format(page=page) for page in range(1, PROXY_SERVICE_MAX_PAGE + 1)]
+    urls = [
+        base_url.format(page=page)
+        for page in range(1, settings.proxy_service_max_page + 1)
+    ]
 
     def parse(self, html: str) -> Iterator[Proxy]:
         doc = pq(html)
