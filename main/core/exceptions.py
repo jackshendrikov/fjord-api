@@ -31,6 +31,30 @@ class InvalidSheetException(BaseInternalException):
     """
 
 
+class BadLanguagesChoiceException(BaseInternalException):
+    """
+    Exception raised when source and target language is identical.
+    """
+
+
+class ProviderUnavailableException(BaseInternalException):
+    """
+    Exception raised when specific provider unavailable for some reason.
+    """
+
+
+class UnsupportedLanguageException(BaseInternalException):
+    """
+    Exception raised when provider can`t process selected language.
+    """
+
+
+class PoolEmptyException(BaseInternalException):
+    """
+    Exception raised when proxy pool is empty.
+    """
+
+
 def add_internal_exception_handler(app: FastAPI) -> None:
     """
     Handle all internal exceptions.

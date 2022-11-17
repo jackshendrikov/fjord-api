@@ -5,19 +5,14 @@ from urllib.parse import parse_qs
 import pandas as pd
 from pydantic import BaseModel, Field, HttpUrl, root_validator
 
-from main.const.tasks import (
-    GOOGLE_SHEET_HOST,
-    GOOGLE_SPREADSHEET_ID_LEN,
-    AvailableLanguages,
-    TaskState,
-)
+from main.const.common import GOOGLE_SHEET_HOST, GOOGLE_SPREADSHEET_ID_LEN, TaskState
 from main.core.exceptions import InvalidSheetException
+from main.schemas.common import TranslationBaseModel
 from main.utils.tasks import gen_export_sheet_url
 
 
-class TranslationDocumentPayload(BaseModel):
+class TranslationRunPayload(TranslationBaseModel):
     link: HttpUrl
-    target_language: AvailableLanguages = Field(default=AvailableLanguages.EN)
     columns_to_translate: list[str] = Field(default=["text", "title"])
 
     @root_validator
@@ -64,14 +59,9 @@ class TranslationDocumentPayload(BaseModel):
         return values
 
 
-class TranslationRegular(BaseModel):
-    text: str
-    target_lang: AvailableLanguages = Field(default=AvailableLanguages.EN)
-
-
 class TranslationTask(BaseModel):
     run_id: str
-    payload: TranslationDocumentPayload
+    payload: TranslationRunPayload
     state: TaskState
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime | None = None
