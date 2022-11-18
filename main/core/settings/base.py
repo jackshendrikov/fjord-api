@@ -36,7 +36,7 @@ class BaseAppSettings(BaseSettings):
     redis_password: str
     redis_key: str = "v-proxies:universal"
 
-    # Mongo env variables.
+    # Mongo ENV variables.
     mongo_host: str
     mongo_port: int
     mongo_db: str
@@ -44,6 +44,13 @@ class BaseAppSettings(BaseSettings):
     mongo_password: str | None
     mongo_auth_source: str | None
     mongo_tasks_collection: str
+
+    # Postgres ENV variables
+    postgres_host: str
+    postgres_port: int
+    postgres_db: str
+    postgres_user: str | None
+    postgres_password: str | None
 
     # Translation providers secrets
     deepl_auth_key: str | None = None

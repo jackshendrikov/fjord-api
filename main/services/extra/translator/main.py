@@ -1,6 +1,6 @@
 from main.const.translator import Provider
 from main.schemas.translation import DetectionIn, TranslationIn
-from main.services.translator.providers import (
+from main.services.extra.translator.providers import (
     BaseTranslationProvider,
     DeeplProvider,
     GoogleTranslateProvider,
@@ -10,19 +10,19 @@ from main.services.translator.providers import (
 
 
 class Translator:
-    def translate(self, item: TranslationIn) -> str:
+    async def translate(self, item: TranslationIn) -> str:
         provider = self._get_provider_class(provider=item.provider)
         autodetect = isinstance(provider, (GoogleTranslateProvider, DeeplProvider))
-        return provider.get_translation(
+        return await provider.get_translation(
             text=item.text,
-            source=item.source_language,
-            target=item.target_language,
+            source=item.source_language.value,
+            target=item.target_language.value,
             autodetect=autodetect,
         )
 
-    def detect_language(self, item: DetectionIn) -> str:
+    async def detect_language(self, item: DetectionIn) -> str:
         provider = self._get_provider_class(provider=item.provider)
-        return provider.detect(text=item.text)
+        return await provider.detect(text=item.text)
 
     @staticmethod
     def _get_provider_class(provider: Provider) -> BaseTranslationProvider:

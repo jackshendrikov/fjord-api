@@ -10,14 +10,14 @@ from main.schemas.translation import (
     TranslationIn,
     TranslationOut,
 )
-from main.services.translation import TranslationService
+from main.services.common.translation import TranslationService
 
 settings = get_app_settings()
 router = APIRouter()
 
 
 @router.get("/translate", response_model=Response[TranslationOut])
-def get_translation(
+async def get_translation(
     text: str = Query(..., max_length=5000, description="Text you want to translate"),
     source_language: Language = Query(
         default=Language.AUTO, description="Language of the text being translated"
@@ -33,12 +33,12 @@ def get_translation(
 ) -> Response:
     """Get single translation."""
     payload = TranslationIn(**locals())
-    data = service.get_translation(payload=payload)
+    data = await service.get_translation(payload=payload)
     return Response(data=data)
 
 
 @router.get("/detect", response_model=Response[DetectionOut])
-def get_source_language(
+async def get_source_language(
     text: str = Query(
         ..., max_length=5000, description="Text language of which you want to detect"
     ),
@@ -50,5 +50,5 @@ def get_source_language(
 ) -> Response:
     """Get single translation."""
     payload = DetectionIn(**locals())
-    data = service.get_source_language(payload=payload)
+    data = await service.get_source_language(payload=payload)
     return Response(data=data)

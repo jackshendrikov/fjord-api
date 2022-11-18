@@ -4,7 +4,7 @@ from pyquery import PyQuery as pq
 
 from main.core.config import get_app_settings
 from main.schemas.proxies import Proxy
-from main.services.proxies.crawlers import BaseCrawler
+from main.services.extra.proxynator.crawlers import BaseCrawler
 
 settings = get_app_settings()
 base_url = "https://hidemy.name/en/proxy-list/?type=hs&start={start}/"

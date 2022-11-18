@@ -1,10 +1,9 @@
 import json
-from typing import Any
 from urllib.parse import quote
 
 from main.const.common import Language
-from main.const.translator import DEFAULT_TIMEOUT, GOOGLE_TTS_RPC
-from main.services.translator.providers import BaseTranslationProvider
+from main.const.translator import GOOGLE_TTS_RPC
+from main.services.extra.translator.providers import BaseTranslationProvider
 
 
 class GoogleTranslateProvider(BaseTranslationProvider):
@@ -15,11 +14,9 @@ class GoogleTranslateProvider(BaseTranslationProvider):
 
     base_url = "https://translate.google.com"
 
-    def __init__(self, **kwargs: Any):
-        super().__init__(**kwargs)
+    def __init__(self) -> None:
+        super().__init__()
         self.full_url = f"{self.base_url}/_/TranslateWebserverUi/data/batchexecute"
-
-        self.timeout = DEFAULT_TIMEOUT
         self.headers.update(
             {
                 "Referer": self.base_url,
@@ -27,31 +24,39 @@ class GoogleTranslateProvider(BaseTranslationProvider):
             }
         )
 
-    def detect(self, text: str) -> str:
+    async def detect(self, text: str, proxy: str | None = None) -> str:
         freq = self._package_rpc(text)
-        response = self._make_advanced_request(
-            url=self.full_url, method="POST", data=freq, timeout=self.timeout
+        r: str = await self._make_request(  # type: ignore
+            url=self.full_url,
+            data=freq,
+            headers=self.headers,
+            proxy=proxy,
+            return_json=False,
         )
-        for line in response.iter_lines(chunk_size=1024):
-            decoded_line = line.decode("utf-8")
-            if GOOGLE_TTS_RPC in decoded_line:
-                response = list(json.loads(decoded_line))
+        for line in r.splitlines():
+            if GOOGLE_TTS_RPC in line:
+                response = list(json.loads(line))
                 response = list(json.loads(response[0][2]))
                 return response[0][2]
 
-    def _translate(self, text: str, source: str, target: str) -> str:
+    async def _translate(
+        self, text: str, source: str, target: str, proxy: str | None
+    ) -> str:
         if source == Language.AUTO:
             source = "auto"
 
         freq = self._package_rpc(text=text, source=source, target=target)
-        response = self._make_advanced_request(
-            url=self.full_url, method="POST", data=freq, timeout=self.timeout
+        r: str = await self._make_request(  # type: ignore
+            url=self.full_url,
+            data=freq,
+            headers=self.headers,
+            proxy=proxy,
+            return_json=False,
         )
 
-        for line in response.iter_lines(chunk_size=1024):
-            decoded_line = line.decode("utf-8")
-            if GOOGLE_TTS_RPC in decoded_line:
-                response = list(json.loads(decoded_line))
+        for line in r.splitlines():
+            if GOOGLE_TTS_RPC in line:
+                response = list(json.loads(line))
                 response = list(json.loads(response[0][2]))
                 response = response[1][0]
 

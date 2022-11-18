@@ -19,6 +19,7 @@ class PaginationMeta(BaseModel):
 
 class TranslationRunPayload(TranslationBaseModel):
     link: HttpUrl
+    # TODO: conlist
     columns_to_translate: list[str] = Field(default=["text", "title"])
 
     @root_validator

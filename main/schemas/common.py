@@ -46,7 +46,7 @@ class TranslationBaseModel(BaseModel):
                 "Source and target languages are identical!", status_code=400
             )
 
-        if not settings.deepl_auth_key:
+        if values["provider"] == Provider.DEEPL and not settings.deepl_auth_key:
             raise ProviderUnavailableException(
                 "DeepL provider currently unavailable! We need paid auth key ((",
                 status_code=400,

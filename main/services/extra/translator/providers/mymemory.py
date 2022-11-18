@@ -1,6 +1,6 @@
 from main.core.config import get_app_settings
-from main.services.translator.errors import TranslationError
-from main.services.translator.providers import BaseTranslationProvider
+from main.services.extra.translator.errors import TranslationError
+from main.services.extra.translator.providers import BaseTranslationProvider
 
 settings = get_app_settings()
 
@@ -15,12 +15,14 @@ class MyMemoryProvider(BaseTranslationProvider):
 
     base_url = "http://api.mymemory.translated.net/get"
 
-    def _translate(self, text: str, source: str, target: str) -> str:
+    async def _translate(
+        self, text: str, source: str, target: str, proxy: str | None
+    ) -> str:
         params = {"q": text, "langpair": f"{source}|{target}"}
         if settings.mymemory_email:
             params["de"] = settings.mymemory_email
 
-        data = self._make_request(url=self.base_url, params=params)
+        data: dict = await self._make_request(url=self.base_url, params=params)  # type: ignore
 
         translation = data["responseData"]["translatedText"]
         if data["responseStatus"] != 200:

@@ -6,7 +6,7 @@ from main.schemas.translation import (
     TranslationIn,
     TranslationOut,
 )
-from main.services.translator.translate import Translator
+from main.services.extra.translator.main import Translator
 
 
 class TranslationService:
@@ -23,16 +23,16 @@ class TranslationService:
         exceptions.ReadTimeout,
     )
 
-    def get_translation(self, payload: TranslationIn) -> TranslationOut:
+    async def get_translation(self, payload: TranslationIn) -> TranslationOut:
         """
         Regular translation text.
         """
-        translation = self._translator.translate(item=payload)
+        translation = await self._translator.translate(item=payload)
         return TranslationOut(translation=translation)
 
-    def get_source_language(self, payload: DetectionIn) -> DetectionOut:
+    async def get_source_language(self, payload: DetectionIn) -> DetectionOut:
         """
         Detect language of input text.
         """
-        language = self._translator.detect_language(item=payload)
+        language = await self._translator.detect_language(item=payload)
         return DetectionOut(language=language)

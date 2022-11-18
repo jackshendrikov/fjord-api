@@ -4,7 +4,7 @@ from collections.abc import Iterator
 from pyquery import PyQuery as pq
 
 from main.schemas.proxies import Proxy
-from main.services.proxies.crawlers import BaseCrawler
+from main.services.extra.proxynator.crawlers import BaseCrawler
 
 
 class ProxyNovaCrawler(BaseCrawler):
@@ -13,6 +13,7 @@ class ProxyNovaCrawler(BaseCrawler):
     Website: https://www.proxynova.com/proxy-server-list/
     """
 
+    # TODO: Update scraper
     urls = ["https://www.proxynova.com/proxy-server-list/"]
 
     def parse(self, html: str) -> Iterator[Proxy]:

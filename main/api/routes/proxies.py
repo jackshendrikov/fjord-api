@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from main.schemas.common import Response
 from main.schemas.proxies import ProxiesList, Proxy, ProxyNumber
-from main.services.proxy import ProxyPoolService
+from main.services.common.proxy import ProxyPoolService
 
 router = APIRouter()
 

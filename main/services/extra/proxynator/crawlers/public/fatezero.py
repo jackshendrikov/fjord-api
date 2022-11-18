@@ -2,7 +2,7 @@ import json
 from collections.abc import Iterator
 
 from main.schemas.proxies import Proxy
-from main.services.proxies.crawlers import BaseCrawler
+from main.services.extra.proxynator.crawlers import BaseCrawler
 
 
 class FateZeroCrawler(BaseCrawler):

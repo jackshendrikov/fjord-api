@@ -51,13 +51,13 @@ class BaseTasksRepository(BaseMongoRepository):
             )
         return TranslationTask(**task)
 
-    def get_tasks_with_state(self, state: str, limit: int = 0) -> list[TranslationTask]:
+    def get_tasks_with_state(self, state: str) -> list[TranslationTask]:
         """
         Find tasks with specific state.
         Return list of `TranslationTask` objects.
         """
         query = {"state": state}
-        found_tasks = self.connection.find(filter=query, limit=limit)
+        found_tasks = self.connection.find(filter=query)
         return [TranslationTask(**task) for task in found_tasks]
 
     def update_task_field(self, task_id: str, **values: Any) -> None:
