@@ -62,9 +62,6 @@ class RedisClient(AbstractClient):
                 db=0,
                 decode_responses=True,
             )
-            # client = StrictRedis(
-            #     host=host, port=port, password=password, db=0, decode_responses=True
-            # )
         except ConnectionError:
             raise ClientConnectionError(f"Cannot connect to Redis server: {host}.")
 

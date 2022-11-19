@@ -1,4 +1,8 @@
-from main.const.translator import Provider
+import asyncio
+
+from main.const.common import Language
+from main.const.translator import Provider, TextHashMap, TranslationMap
+from main.schemas.proxies import Proxy
 from main.schemas.translation import DetectionIn, TranslationIn
 from main.services.extra.translator.providers import (
     BaseTranslationProvider,
@@ -12,17 +16,50 @@ from main.services.extra.translator.providers import (
 class Translator:
     async def translate(self, item: TranslationIn) -> str:
         provider = self._get_provider_class(provider=item.provider)
-        autodetect = isinstance(provider, (GoogleTranslateProvider, DeeplProvider))
-        return await provider.get_translation(
+        translation = await provider.get_translation(
             text=item.text,
             source=item.source_language.value,
             target=item.target_language.value,
-            autodetect=autodetect,
+            autodetect=self._has_autodetect(provider=item.provider),
         )
+        await provider.close()
+        return translation
 
     async def detect_language(self, item: DetectionIn) -> str:
         provider = self._get_provider_class(provider=item.provider)
-        return await provider.detect(text=item.text)
+        detection = await provider.detect(text=item.text)
+        await provider.close()
+        return detection
+
+    async def translate_multiple(
+        self,
+        provider: Provider,
+        source: Language,
+        target: Language,
+        proxy: Proxy,
+        texts: list[TextHashMap],
+    ) -> list[TranslationMap]:
+        trans_provider = self._get_provider_class(provider=provider)
+
+        translations_tasks = [
+            trans_provider.get_translation(
+                text=text.original,
+                source=source.value,
+                target=target.value,
+                autodetect=self._has_autodetect(provider=provider),
+                proxy=proxy.http_string,
+                text_hash=text.hash,
+            )
+            for text in texts
+        ]
+
+        translations = await asyncio.gather(*translations_tasks)
+        await trans_provider.close()
+        return translations
+
+    @staticmethod
+    def _has_autodetect(provider: Provider) -> bool:
+        return isinstance(provider, (GoogleTranslateProvider, DeeplProvider))
 
     @staticmethod
     def _get_provider_class(provider: Provider) -> BaseTranslationProvider:

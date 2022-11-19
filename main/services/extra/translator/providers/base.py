@@ -1,13 +1,15 @@
+import asyncio
 import json
 from abc import ABCMeta, abstractmethod
+from textwrap import wrap
 
-import aiohttp
 import urllib3
+from aiohttp import ClientSession, ClientTimeout
 
 from main.const.common import DEFAULT_HEADERS, Language
-from main.const.translator import DEFAULT_TIMEOUT
+from main.const.translator import DEFAULT_TIMEOUT, TranslationMap
 from main.core.config import get_app_settings
-from main.core.logging import logger
+from main.services.extra.errors import async_session_handler
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 settings = get_app_settings()
@@ -15,12 +17,20 @@ settings = get_app_settings()
 
 class BaseTranslationProvider(metaclass=ABCMeta):
     base_url = ""
+    chars_limit = 5000
+
+    __session = ClientSession()
 
     timeout = DEFAULT_TIMEOUT
     headers = DEFAULT_HEADERS
 
-    # TODO: Add 5000 char limit
+    @property
+    def _session(self) -> ClientSession:
+        if self.__session.closed:
+            self.__session = ClientSession()
+        return self.__session
 
+    @async_session_handler(session=__session)
     async def get_translation(
         self,
         text: str,
@@ -28,7 +38,8 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         target: str,
         autodetect: bool,
         proxy: str | None = None,
-    ) -> str:
+        text_hash: str | None = None,
+    ) -> str | TranslationMap:
         """
         Get translation of a single text.
 
@@ -37,14 +48,31 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         :param target: The target language code (ISO 639).
         :param autodetect: Indicates whether the provider has its own language detection or whether a third-party service is needed.
         :param proxy: proxy for request.
+        :param text_hash: if present, then we need to return translation with original text + hash.
         :return: Translated text.
         """
+
+        text_list = wrap(text, self.chars_limit, replace_whitespace=False)
+
         if not autodetect and source == Language.AUTO:
-            source = await self.detect(text, proxy=proxy)
-        translated_text = await self._translate(
-            text=text, source=source, target=target, proxy=proxy
-        )
-        return translated_text.strip()
+            source = await self.detect(text_list[0], proxy=proxy)
+
+        translations_tasks = [
+            asyncio.create_task(
+                self._translate(
+                    text=wrapped_text, source=source, target=target, proxy=proxy
+                )
+            )
+            for wrapped_text in text_list
+        ]
+        translations = await asyncio.gather(*translations_tasks)
+        translated_text = " ".join(translations).strip()
+
+        if text_hash:
+            return TranslationMap(
+                original=text, translation=translated_text, hash=text_hash
+            )
+        return translated_text
 
     async def detect(self, text: str, proxy: str | None = None) -> str:
         """
@@ -104,21 +132,34 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         if headers is None:
             headers = self.headers
 
-        timeout = aiohttp.ClientTimeout(total=self.timeout)
-        async with aiohttp.ClientSession(headers=headers) as session:
-            logger.info(f"Make `POST` request to: {url}")
-            async with session.post(
-                url=url,
-                params=params,
-                data=data,
-                headers=headers,
-                verify_ssl=False,
-                timeout=timeout,
-                proxy=proxy,
-            ) as r:
-                response = await r.text()
-                r.raise_for_status()
+        timeout = ClientTimeout(total=self.timeout)
+        s = self._session.post(
+            url=url,
+            params=params,
+            data=data,
+            headers=headers,
+            verify_ssl=False,
+            timeout=timeout,
+            proxy=proxy,
+        )
+        async with s as r:
+            response = await r.text()
+        r.raise_for_status()
 
-                if return_json:
-                    return json.loads(response)
-                return response
+        if return_json:
+            return json.loads(response)
+        return response
+
+    async def close(self) -> None:
+        await self.__session.close()
+
+    def __del__(self) -> None:
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_closed():
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        loop.create_task(self.__session.close())

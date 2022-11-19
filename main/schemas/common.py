@@ -39,7 +39,7 @@ class TranslationBaseModel(BaseModel):
     target_language: Language
     provider: Provider
 
-    @root_validator
+    @root_validator(pre=False, skip_on_failure=True)
     def validate_model(cls, values: dict[str, Any]) -> dict[str, Any]:
         if values["source_language"] == values["target_language"]:
             raise BadLanguagesChoiceException(

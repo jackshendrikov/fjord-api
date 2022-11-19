@@ -3,9 +3,11 @@ from main.core.config import get_app_settings
 from main.core.logging import logger
 from main.db.repositories.proxies import ProxyPoolRepository
 from main.db.repositories.tasks import TranslationTasksRepository
+from main.schemas.notifier import NotifierError
 from main.schemas.tasks import TranslationTask
-
-# from main.services.runner import TranslationTaskExecutor
+from main.services.executor import TranslationTaskExecutor
+from main.services.extra.errors import TranslationError
+from main.services.extra.notifier import NotificationService
 
 settings = get_app_settings()
 
@@ -17,10 +19,12 @@ class TranslationTaskScheduler:
 
     # Repositories
     _tasks_repository: TranslationTasksRepository = TranslationTasksRepository()
-    _proxies_repository: ProxyPoolRepository = ProxyPoolRepository()
 
-    # Runner/Checker
-    # _runner: TranslationTaskExecutor = TranslationTaskExecutor()
+    # Notifier
+    _notifier: NotificationService = NotificationService()
+
+    # Executor
+    _executor: TranslationTaskExecutor = TranslationTaskExecutor()
 
     @property
     def queued_tasks(self) -> list[TranslationTask]:
@@ -41,7 +45,7 @@ class TranslationTaskScheduler:
         """Return amount of free slots."""
         return settings.max_concurrent_tasks - len(self.active_tasks)
 
-    def run_translation_process(self) -> None:
+    async def run_translation_process(self) -> None:
         """General method for running translation task."""
         queued_tasks = self.queued_tasks
         if not queued_tasks:
@@ -62,6 +66,17 @@ class TranslationTaskScheduler:
                 f"Task state updated to {TaskState.consumed} for task: {task.task_id}"
             )
 
-            # self._runner.execute(task=task)
+            try:
+                await self._executor.execute(payload=task.payload)
+            except TranslationError as exc:
+                self._notifier.send_notification(
+                    error=NotifierError(task_id=task.task_id, error_msg=exc)
+                )
+                self._tasks_repository.update_task_field(
+                    task_id=task.task_id, state=TaskState.error
+                )
 
+            self._tasks_repository.update_task_field(
+                task_id=task.task_id, state=TaskState.ready
+            )
             free_slots -= 1

@@ -1,5 +1,3 @@
-from requests import exceptions
-
 from main.schemas.translation import (
     DetectionIn,
     DetectionOut,
@@ -13,15 +11,6 @@ class TranslationService:
     """Translation Service."""
 
     _translator = Translator()
-
-    RETRY_EXCEPTION = (
-        exceptions.ConnectionError,
-        exceptions.RequestException,
-        exceptions.HTTPError,
-        exceptions.Timeout,
-        exceptions.ConnectTimeout,
-        exceptions.ReadTimeout,
-    )
 
     async def get_translation(self, payload: TranslationIn) -> TranslationOut:
         """

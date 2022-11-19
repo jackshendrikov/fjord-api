@@ -1,5 +1,5 @@
 from main.core.config import get_app_settings
-from main.services.extra.translator.errors import TranslationError
+from main.services.extra.errors import TranslationError
 from main.services.extra.translator.providers import BaseTranslationProvider
 
 settings = get_app_settings()
@@ -14,6 +14,7 @@ class MyMemoryProvider(BaseTranslationProvider):
     """
 
     base_url = "http://api.mymemory.translated.net/get"
+    chars_limit = 500
 
     async def _translate(
         self, text: str, source: str, target: str, proxy: str | None

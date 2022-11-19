@@ -16,7 +16,6 @@ class ProxyListPlusCrawler(BaseCrawler):
     Website: https://list.proxylistplus.com
     """
 
-    # TODO: Update scraper
     urls = [
         base_url.format(page=page)
         for page in range(1, settings.proxy_service_max_page + 1)

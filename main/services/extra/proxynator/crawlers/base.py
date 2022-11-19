@@ -9,6 +9,7 @@ from main.const.proxies import PROXY_CHECK_TIMEOUT, PROXY_CHECK_URL
 from main.core.config import get_app_settings
 from main.core.logging import logger
 from main.schemas.proxies import Proxy
+from main.services.extra.errors import CLIENT_EXCEPTIONS
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 settings = get_app_settings()
@@ -77,8 +78,7 @@ class BaseCrawler:
                 if settings.log_proxies:
                     logger.info(f"Good proxy: {proxy.string}")
                 return proxy
-        # TODO: Replace general Exception
-        except Exception:
+        except CLIENT_EXCEPTIONS:
             if settings.log_proxies:
                 logger.info(f"Bad proxy: {proxy.string}")
             return None

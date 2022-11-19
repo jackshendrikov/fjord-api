@@ -58,6 +58,10 @@ class BaseAppSettings(BaseSettings):
     mymemory_email: str | None = None
     detect_language_api_key: str
 
+    # Telegram Settings.
+    tg_chat_id: int
+    tg_bot_token: str
+
     # How many tasks can be processed in parallel.
     max_concurrent_tasks: int
 
@@ -75,7 +79,7 @@ class BaseAppSettings(BaseSettings):
     sentry_dsn: str | None
 
     # Proxy settings
-    log_proxies: bool | None = False
+    log_proxies: bool = False
     proxy_score_max = 1
     proxy_score_min = 0
     proxy_score_init = 1

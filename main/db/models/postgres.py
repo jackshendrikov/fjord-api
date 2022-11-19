@@ -11,4 +11,4 @@ class Translation(Table, help_text="Necessary info about translation"):  # type:
     provider = Varchar(choices=Provider)
     source = Varchar(choices=Language)
     target = Varchar(choices=Language)
-    text_hash = Varchar(length=256)
+    text_hash = Varchar(length=256, unique=True)

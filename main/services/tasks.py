@@ -14,6 +14,8 @@ class TranslationTasksService:
 
     _tasks_repository: TranslationTasksRepository = TranslationTasksRepository()
 
+    # TODO: Add endpoint to download CSV with translations
+
     def create_task(self, payload: TranslationRunPayload) -> TranslationTask:
         """
         Create document translation task.

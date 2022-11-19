@@ -25,6 +25,7 @@ class RawProxyCrawler(BaseCrawler):
         "https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt",
         "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
         "https://raw.githubusercontent.com/UserR3X/proxy-list/main/online/http%2Bs.txt",
+        "https://api.proxyscrape.com/?request=displayproxies&proxytype=http",
         "https://api.proxyscrape.com/v2/?request=getproxies&protocol=http",
     ]
 

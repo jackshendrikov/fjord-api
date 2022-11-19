@@ -2,7 +2,7 @@ import os
 
 from piccolo.conf.apps import AppConfig
 
-from main.apps.tables import Translation
+from main.db.models.postgres import Translation
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 

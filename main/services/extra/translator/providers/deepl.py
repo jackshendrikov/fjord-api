@@ -1,6 +1,6 @@
 from main.const.common import Language
 from main.core.config import get_app_settings
-from main.services.extra.translator.errors import TranslationError
+from main.services.extra.errors import TranslationError
 from main.services.extra.translator.providers import BaseTranslationProvider
 
 settings = get_app_settings()
