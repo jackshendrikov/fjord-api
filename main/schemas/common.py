@@ -48,14 +48,13 @@ class TranslationBaseModel(BaseModel):
 
         if values["provider"] == Provider.DEEPL and not settings.deepl_auth_key:
             raise ProviderUnavailableException(
-                "DeepL provider currently unavailable! We need paid auth key ((",
+                "DeepL provider currently unavailable! We need paid auth key..",
                 status_code=400,
             )
 
-        if UNSUPPORTED_LANGUAGES.get(values["provider"]) in [
-            values["source_language"],
-            values["target_language"],
-        ]:
+        langs = (values["source_language"], values["target_language"])
+        unsupported_langs = UNSUPPORTED_LANGUAGES.get(values["provider"], [])
+        if any(x in unsupported_langs for x in langs):
             raise UnsupportedLanguageException(
                 "Selected provider cannot process selected language.", status_code=400
             )

@@ -3,6 +3,7 @@ from urllib.parse import parse_qs
 import pandas as pd
 from fastapi import APIRouter, Depends, Query
 from pydantic import HttpUrl
+from starlette.responses import StreamingResponse
 
 from main.const.common import GOOGLE_SHEET_HOST, GOOGLE_SPREADSHEET_ID_LEN, Language
 from main.const.translator import Provider
@@ -124,3 +125,15 @@ def get_task_status(
     """Retrieve translation task status by `task_id`."""
     task = service.get_task_status(task_id=task_id)
     return Response(data=task)
+
+
+@router.get("/{task_id}/download")
+async def get_translation_csv(
+    task_id: str, service: TranslationTasksService = Depends()
+) -> StreamingResponse:
+    """Generate and Download CSV with translations by link from task with `task_id`."""
+
+    stream = await service.get_translation_csv(task_id=task_id)
+    response = StreamingResponse(iter([stream.getvalue()]), media_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    return response

@@ -94,6 +94,8 @@ class TranslationTaskExecutor:
                 proxy=proxy,
             )
 
+            # TODO: If source is autodetect - replace it with detection result (or not)
+
             translations = [
                 Translation(
                     original=item.original,

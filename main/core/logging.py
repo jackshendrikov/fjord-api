@@ -6,7 +6,7 @@ import logging
 from main.core.config import get_app_settings
 
 DISABLE_LOGGERS: list[str] = []
-DEFAULT_LOGGER_NAME = "v-api"
+DEFAULT_LOGGER_NAME = "fjord-api"
 
 LOG_MESSAGE_FORMAT = "[%(name)s] [%(asctime)s] %(message)s"
 

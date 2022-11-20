@@ -10,7 +10,7 @@ class DevAppSettings(AppSettings):
 
     debug: bool = True
 
-    title: str = "[DEV] V API"
+    title: str = "[DEV] Fjord API"
 
     logging_level: int = logging.DEBUG
 

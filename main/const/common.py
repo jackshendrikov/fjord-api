@@ -17,6 +17,7 @@ class Language(StrEnum):
     JP = "ja"
     IT = "it"
     GE = "de"
+    NO = "no"
     UA = "uk"
 
 

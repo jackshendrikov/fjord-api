@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Fjord API - Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="/static/favicon.ico" />
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat:400,300,700'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<div id="player" style="display: none;"></div>
+
+<nav class="navbar navbar-toggleable-md fixed-top navbar-transparent" color-on-scroll="500">
+    <div class="container">
+        <div class="navbar-translate">
+            <button class="navbar-toggler navbar-toggler-right navbar-burger" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-bar"></span>
+                <span class="navbar-toggler-bar"></span>
+                <span class="navbar-toggler-bar"></span>
+            </button>
+            <a class="navbar-brand" href="">Simporter</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <div id='pauseplay' class="nav-link" rel="tooltip" title="Add Ambient Sound" data-placement="bottom">
+                        <i id="volumeUp" class="fa-solid fa-volume-high"></i>
+                        <i id="volumeDown" class="fa-solid fa-volume-mute"></i>
+                        <p class="hidden-lg-up">Ambient Sound</p>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="/docs" target="_blank" class="btn btn-danger btn-round">Swagger</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin" target="_blank" class="btn btn-warning btn-round">Admin Panel</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="wrapper">
+    <div class="page-header section-dark" style="background-image: url('http://demos.creative-tim.com/paper-kit-2/assets/img/antoine-barres.jpg')">
+        <div class="filter"></div>
+        <div class="content-center">
+            <div class="container">
+                <div class="title-brand">
+                    <h1 class="presentation-title">{{ title }}</h1>
+                    <div class="fog-low">
+                        <img src="http://demos.creative-tim.com/paper-kit-2/assets/img/fog-low.png" alt="">
+                    </div>
+                    <div class="fog-low right">
+                        <img src="http://demos.creative-tim.com/paper-kit-2/assets/img/fog-low.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="moving-clouds" style="background-image: url('http://demos.creative-tim.com/paper-kit-2/assets/img/clouds.png'); ">
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js'></script>
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'></script>
+<script  src="/static/script.js"></script>
+</body>
+</html>

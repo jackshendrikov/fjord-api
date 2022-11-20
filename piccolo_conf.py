@@ -15,4 +15,6 @@ DB = PostgresEngine(
     }
 )
 
-APP_REGISTRY = AppRegistry(apps=["main.apps.piccolo_app", "piccolo_admin.piccolo_app"])
+APP_REGISTRY = AppRegistry(
+    apps=["main.apps.home.piccolo_app", "piccolo_admin.piccolo_app"]
+)

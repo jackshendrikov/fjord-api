@@ -31,4 +31,4 @@ class TranslationMap(TextHashMap):
 
 
 DEFAULT_PROVIDER = Provider.GOOGLE_TRANSLATE
-UNSUPPORTED_LANGUAGES = {Provider.LIBRE_TRANSLATE: Language.UA}
+UNSUPPORTED_LANGUAGES = {Provider.LIBRE_TRANSLATE: [Language.NO, Language.UA]}

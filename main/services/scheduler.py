@@ -1,7 +1,6 @@
 from main.const.common import TaskState
 from main.core.config import get_app_settings
 from main.core.logging import logger
-from main.db.repositories.proxies import ProxyPoolRepository
 from main.db.repositories.tasks import TranslationTasksRepository
 from main.schemas.notifier import NotifierError
 from main.schemas.tasks import TranslationTask

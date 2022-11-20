@@ -1,4 +1,10 @@
+import asyncio
+from io import StringIO
+
+import pandas as pd
+
 from main.const.common import TaskState
+from main.db.models.postgres import Translation
 from main.db.repositories.tasks import TranslationTasksRepository
 from main.schemas.tasks import (
     TranslationRunPayload,
@@ -6,6 +12,7 @@ from main.schemas.tasks import (
     TranslationTasksList,
     TranslationTaskStatus,
 )
+from main.utils.common import get_text_hash
 from main.utils.tasks import generate_task_id
 
 
@@ -13,8 +20,6 @@ class TranslationTasksService:
     """Translation Task Service."""
 
     _tasks_repository: TranslationTasksRepository = TranslationTasksRepository()
-
-    # TODO: Add endpoint to download CSV with translations
 
     def create_task(self, payload: TranslationRunPayload) -> TranslationTask:
         """
@@ -75,3 +80,28 @@ class TranslationTasksService:
 
         task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
         return TranslationTaskStatus(task_id=task_id, state=task.state)
+
+    async def get_translation_csv(self, task_id: str) -> StringIO:
+        """
+        Return CSV from payload with translations.
+        """
+        task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
+
+        df = pd.read_csv(task.payload.link)
+        stream = StringIO()
+
+        for column in task.payload.columns_to_translate:
+            df[f"{column}_translated"] = await asyncio.gather(
+                *(self._get_translation(v) for v in df[column])
+            )
+
+        df.to_csv(stream, index=False)
+
+        return stream
+
+    @staticmethod
+    async def _get_translation(text: str) -> str | None:
+        text_hash = get_text_hash(text=text)
+        item = await Translation.objects().get(Translation.text_hash == text_hash)
+        if item:
+            return item.translated

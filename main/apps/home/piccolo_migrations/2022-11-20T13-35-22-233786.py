@@ -4,7 +4,7 @@ from piccolo.apps.migrations.auto.migration_manager import MigrationManager
 from piccolo.columns.column_types import Text, Varchar
 from piccolo.columns.indexes import IndexMethod
 
-ID = "2022-11-17T23:54:43:588530"
+ID = "2022-11-20T13:35:22:233786"
 VERSION = "0.96.0"
 DESCRIPTION = ""
 
@@ -159,7 +159,7 @@ async def forwards():
             "default": "",
             "null": False,
             "primary_key": False,
-            "unique": False,
+            "unique": True,
             "index": False,
             "index_method": IndexMethod.btree,
             "choices": None,

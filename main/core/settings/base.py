@@ -34,7 +34,7 @@ class BaseAppSettings(BaseSettings):
     redis_host: str
     redis_port: int
     redis_password: str
-    redis_key: str = "v-proxies:universal"
+    redis_key: str = "fjord-proxies:universal"
 
     # Mongo ENV variables.
     mongo_host: str

@@ -10,7 +10,7 @@ class TestAppSettings(AppSettings):
 
     debug: bool = True
 
-    title: str = "[TEST] V API"
+    title: str = "[TEST] Fjord API"
 
     logging_level: int = logging.DEBUG
 
