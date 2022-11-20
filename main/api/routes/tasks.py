@@ -30,8 +30,9 @@ def get_all_task(
     service: TranslationTasksService = Depends(),
 ) -> Response:
     """Retrieve all translation tasks."""
+
     tasks = service.get_all_tasks(limit=limit, offset=offset)
-    return Response(data=tasks)
+    return Response(data=tasks, message="Translation tasks retrieved successfully")
 
 
 @router.post("", response_model=Response[TranslationTask])
@@ -56,7 +57,8 @@ def set_task(
     ),
     service: TranslationTasksService = Depends(),
 ) -> Response:
-    """Run translation task."""
+    """Validate params and create translation task."""
+
     if link.host != GOOGLE_SHEET_HOST:
         raise InvalidSheetException(
             f"Host `{link.host}` is invalid. Should be `{GOOGLE_SHEET_HOST}`.",
@@ -101,21 +103,23 @@ def set_task(
             columns_to_translate=columns_to_translate,
         )
     )
-    return Response(data=task)
+    return Response(data=task, message="Translation tasks created successfully")
 
 
 @router.get("/{task_id}", response_model=Response[TranslationTask])
 def get_task(task_id: str, service: TranslationTasksService = Depends()) -> Response:
     """Retrieve translation task by `task_id`."""
+
     task = service.get_task(task_id=task_id)
-    return Response(data=task)
+    return Response(data=task, message="Translation task retrieved successfully")
 
 
 @router.delete("/{task_id}", response_model=Response[TranslationTask])
 def delete_task(task_id: str, service: TranslationTasksService = Depends()) -> Response:
     """Soft delete translation task by `task_id`."""
+
     task = service.delete_task(task_id=task_id)
-    return Response(data=task)
+    return Response(data=task, message="Translation task deleted successfully")
 
 
 @router.get("/{task_id}/status", response_model=Response[TranslationTaskStatus])
@@ -123,8 +127,9 @@ def get_task_status(
     task_id: str, service: TranslationTasksService = Depends()
 ) -> Response:
     """Retrieve translation task status by `task_id`."""
+
     task = service.get_task_status(task_id=task_id)
-    return Response(data=task)
+    return Response(data=task, message="Translation task status retrieved successfully")
 
 
 @router.get("/{task_id}/download")

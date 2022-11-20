@@ -1,6 +1,4 @@
-"""
-Module for custom database errors.
-"""
+"""Module for custom database errors."""
 
 
 class ClientDoesNotExist(Exception):

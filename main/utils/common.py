@@ -9,4 +9,6 @@ def chunks(lst: list, size: int) -> Generator:
 
 
 def get_text_hash(text: str) -> str:
+    """Get SHA256 hash from string"""
+
     return sha256(text.encode()).hexdigest()

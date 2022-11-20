@@ -4,9 +4,7 @@ from main.core.settings.app import AppSettings
 
 
 class TestAppSettings(AppSettings):
-    """
-    Test application settings.
-    """
+    """Test application settings."""
 
     debug: bool = True
 

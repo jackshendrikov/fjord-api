@@ -9,9 +9,8 @@ settings = get_app_settings()
 
 
 def register_background_tasks(app: FastAPI) -> None:
-    """
-    Register tasks before initialize application.
-    """
+    """Register tasks before initialize application."""
+
     if not settings.run_background_tasks:
         return
 

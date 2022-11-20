@@ -13,7 +13,7 @@ base_url = "https://hidemy.name/en/proxy-list/?type=hs&start={start}/"
 class HideMyNameCrawler(BaseCrawler):
     """
     HideMyName crawler.
-    Website:https://hidemy.name/en/proxy-list/
+    Website: https://hidemy.name/en/proxy-list/
     """
 
     urls = [

@@ -27,25 +27,25 @@ class TranslationTaskScheduler:
 
     @property
     def queued_tasks(self) -> list[TranslationTask]:
-        """
-        Return list of currently queued tasks.
-        """
+        """Return list of currently queued tasks."""
+
         return self._tasks_repository.get_tasks_with_state(state=TaskState.queued)
 
     @property
     def active_tasks(self) -> list[TranslationTask]:
-        """
-        Return list of currently consumed tasks.
-        """
+        """Return list of currently consumed tasks."""
+
         return self._tasks_repository.get_tasks_with_state(state=TaskState.consumed)
 
     @property
     def free_slots(self) -> int:
         """Return amount of free slots."""
+
         return settings.max_concurrent_tasks - len(self.active_tasks)
 
     async def run_translation_process(self) -> None:
-        """General method for running translation task."""
+        """General method for executing translation task."""
+
         queued_tasks = self.queued_tasks
         if not queued_tasks:
             logger.info("Queued translation tasks not found.")

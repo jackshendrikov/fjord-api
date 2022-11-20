@@ -1,6 +1,5 @@
-"""
-Module for custom translation errors.
-"""
+"""Module for custom translation errors."""
+
 from asyncio.exceptions import TimeoutError
 from collections.abc import Callable
 from typing import Any
@@ -11,7 +10,7 @@ from aiohttp.web import HTTPError
 
 class TranslationError(Exception):
     """
-    Exception raised when error was during translation process.
+    An exception occurs when an unexpected error occurred during the translation process.
     """
 
 
@@ -26,8 +25,7 @@ CLIENT_EXCEPTIONS = (HTTPError, ClientError, TimeoutError)
 
 def async_session_handler(session: ClientSession) -> Callable:
     """
-    Decorator that handles possible request errors during the translation process.
-    Closed session in case of error.
+    Decorator that handles possible errors during the translation process.
     """
 
     def decorator(func: Callable) -> Callable:

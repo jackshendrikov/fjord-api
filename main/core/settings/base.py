@@ -2,29 +2,15 @@ from pydantic import BaseSettings
 
 
 class AppEnvTypes:
-    """
-    Available application environments.
-    """
+    """Available application environments."""
 
     prod = "prod"
     dev = "dev"
     test = "test"
 
 
-class ProjectEnv:
-    """
-    Available project environments.
-    """
-
-    production = "production"
-    staging = "staging"
-    testing = "testing"
-
-
 class BaseAppSettings(BaseSettings):
-    """
-    Base application setting class.
-    """
+    """Base application setting class."""
 
     current_env: str
 

@@ -8,7 +8,6 @@ router = APIRouter()
 
 @router.get("", response_model=Status)
 def status() -> Status:
-    """
-    Health check for API.
-    """
+    """Health check for API."""
+
     return Status(**response)

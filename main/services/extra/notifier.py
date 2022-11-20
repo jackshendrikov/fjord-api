@@ -9,19 +9,13 @@ from main.schemas.notifier import NotifierError
 
 settings = get_app_settings()
 
-# TODO: Add logging
-# TODO: Add documentation
-
 
 class NotificationService:
     """Service for send notification about unexpected translation error to TG group"""
 
     def send_notification(self, error: NotifierError) -> None:
-        """
-        Send notification to specific telegram group.
+        """Send notification to specific telegram group."""
 
-        :param error: notification error data.
-        """
         message = self._generate_message(error=error)
         tg_msg = {"chat_id": settings.tg_chat_id, "text": message, "parse_mode": "HTML"}
         response = self._make_telegram_request(json=tg_msg)
@@ -30,6 +24,8 @@ class NotificationService:
         )
 
     def _generate_message(self, error: NotifierError) -> str:
+        """Generate error message"""
+
         general_data = [
             ["SERVICE", "FJORD API"],
             ["ENVIRONMENT", settings.current_env.upper()],
@@ -48,24 +44,16 @@ class NotificationService:
 
     @staticmethod
     def _generate_table(data: list[list[str]]) -> str:
-        """
-        Generate pretty table for specific data.
+        """Generate markdown-like table for specific data."""
 
-        :param data: list of list with 2 str params (column name + value)
-        :return: markdown-like table.
-        """
         table = PrettyTable(header=False, align="l", padding_width=2)
         table.add_rows(data)
         return f"<pre>{table}</pre>"
 
     @staticmethod
     def _make_telegram_request(json: dict) -> dict:
-        """
-        Make request to Telegram API endpoint.
+        """Make request to Telegram API endpoint."""
 
-        :param json: Dictionary of the necessary information to send with the request.
-        :return: json response.
-        """
         api_url = f"https://api.telegram.org/bot{settings.tg_bot_token}/sendMessage"
 
         response = request(method="POST", url=api_url, json=json)

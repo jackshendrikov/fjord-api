@@ -15,9 +15,8 @@ class BaseTasksRepository(BaseMongoRepository):
     """
 
     def insert_translation_task(self, task: TranslationTask) -> None:
-        """
-        Insert translation task dict to MongoDB.
-        """
+        """Insert translation task dict to MongoDB."""
+
         self.connection.insert_one(document=task.dict())
 
     def find_all_tasks(
@@ -28,6 +27,7 @@ class BaseTasksRepository(BaseMongoRepository):
         Return total amount of tasks and list with tasks which passes pagination condition.
         If any tasks no exist in DB return tuple with zero task number and empty tasks list.
         """
+
         total_queued_tasks = self.connection.count_documents(filter={})
         if total_queued_tasks:
             tasks = (
@@ -41,8 +41,9 @@ class BaseTasksRepository(BaseMongoRepository):
 
     def find_task_by_task_id(self, task_id: str) -> TranslationTask:
         """
-        Return task by `task_id` field or rise an error if entity does not exists.
+        Return task by `task_id` field or raise an error if entity does not exist.
         """
+
         query = {"task_id": task_id}
         task = self.connection.find_one(filter=query)
         if not task:
@@ -56,12 +57,14 @@ class BaseTasksRepository(BaseMongoRepository):
         Find tasks with specific state.
         Return list of `TranslationTask` objects.
         """
+
         query = {"state": state}
         found_tasks = self.connection.find(filter=query)
         return [TranslationTask(**task) for task in found_tasks]
 
     def update_task_field(self, task_id: str, **values: Any) -> None:
         """Update specific task field with new value"""
+
         query = {"task_id": task_id}
         self.connection.update_one(
             filter=query, update={"$set": {**values, "updated_at": datetime.now()}}
@@ -70,7 +73,7 @@ class BaseTasksRepository(BaseMongoRepository):
 
 class TranslationTasksRepository(BaseTasksRepository):
     """
-    Repository to manipulate with the regular crawling task Mongo collection.
+    Repository to manipulate with translation tasks from Mongo collection.
     """
 
     db = settings.mongo_db

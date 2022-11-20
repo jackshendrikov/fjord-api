@@ -23,7 +23,10 @@ class TranslationTasksService:
 
     def create_task(self, payload: TranslationRunPayload) -> TranslationTask:
         """
-        Create document translation task.
+        Create translation task.
+
+        :param payload: payload of the task.
+        :return: Translation task.
         """
 
         task = TranslationTask(
@@ -54,12 +57,13 @@ class TranslationTasksService:
         :param task_id: ID of the task.
         :return: Translation task.
         """
+
         return self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
     def delete_task(self, task_id: str) -> TranslationTask:
         """
-        Return translation task by `task_id` field.
-        Or raise an exception if not found.
+        Return translation task by `task_id` field or raise an exception if not found.
+
         :param task_id: ID of the task.
         :return: Translation task.
         """
@@ -83,7 +87,11 @@ class TranslationTasksService:
 
     async def get_translation_csv(self, task_id: str) -> StringIO:
         """
-        Return CSV from payload with translations.
+        Generate CSV with translations (the original CSV is taken from the link in the payload).
+
+        :param task_id: ID of the task.
+
+        :return: streaming response.
         """
         task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
@@ -101,6 +109,8 @@ class TranslationTasksService:
 
     @staticmethod
     async def _get_translation(text: str) -> str | None:
+        """Map translation with original text hash"""
+
         text_hash = get_text_hash(text=text)
         item = await Translation.objects().get(Translation.text_hash == text_hash)
         if item:

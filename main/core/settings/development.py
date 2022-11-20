@@ -4,9 +4,7 @@ from main.core.settings.app import AppSettings
 
 
 class DevAppSettings(AppSettings):
-    """
-    Development application settings.
-    """
+    """Development application settings."""
 
     debug: bool = True
 

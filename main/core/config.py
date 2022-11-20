@@ -17,9 +17,8 @@ environments: dict[str, type[AppEnvType]] = {  # type: ignore
 
 @lru_cache
 def get_app_settings() -> AppSettings:
-    """
-    Return application config.
-    """
+    """Return application config."""
+
     app_env = BaseAppSettings().app_env
     config = environments[app_env]
     return config()  # type: ignore

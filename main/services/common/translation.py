@@ -13,15 +13,13 @@ class TranslationService:
     _translator = Translator()
 
     async def get_translation(self, payload: TranslationIn) -> TranslationOut:
-        """
-        Regular translation text.
-        """
+        """Get translation of single text."""
+
         translation = await self._translator.translate(item=payload)
         return TranslationOut(translation=translation)
 
     async def get_source_language(self, payload: DetectionIn) -> DetectionOut:
-        """
-        Detect language of input text.
-        """
+        """Detect language of input text."""
+
         language = await self._translator.detect_language(item=payload)
         return DetectionOut(language=language)

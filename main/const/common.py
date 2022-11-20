@@ -1,15 +1,9 @@
 from fastapi_utils.enums import StrEnum
 
 
-class Region(StrEnum):
-    """
-    Stores
-    """
-
-
 class Language(StrEnum):
     """
-    Stores the languages into which we can translate textю
+    Stores the languages we can use to process and translate texts.
     """
 
     AUTO = "autodetect"

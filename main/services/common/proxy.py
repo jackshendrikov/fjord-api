@@ -7,14 +7,13 @@ settings = get_app_settings()
 
 
 class ProxyPoolService:
-    """
-    Proxy pool service.
-    """
+    """Proxy pool service."""
 
     _proxies_repository: ProxyPoolRepository = ProxyPoolRepository()
 
     async def get_all_proxies(self) -> ProxiesList:
         """Return all proxies."""
+
         return await self._proxies_repository.get_all_proxy()
 
     async def get_random_proxy(self) -> Proxy:

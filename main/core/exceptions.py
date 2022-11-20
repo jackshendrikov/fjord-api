@@ -98,9 +98,7 @@ def add_request_exception_handler(app: FastAPI) -> None:
 
 
 def add_http_exception_handler(app: FastAPI) -> None:
-    """
-    Handle http exceptions.
-    """
+    """Handle http exceptions."""
 
     @app.exception_handler(HTTPException)
     async def _exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
@@ -120,6 +118,7 @@ def add_exception_handlers(app: FastAPI) -> None:
     """
     Set all exception handlers to app object.
     """
+
     add_internal_exception_handler(app=app)
     add_request_exception_handler(app=app)
     add_http_exception_handler(app=app)

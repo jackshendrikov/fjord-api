@@ -25,16 +25,13 @@ class AbstractClient(ABC):
 
     @abstractmethod
     def connect(self) -> Redis | MongoClient:
-        """
-        Return client object.
-        """
+        """Return client object."""
+
         raise NotImplementedError()
 
 
 class RedisClient(AbstractClient):
-    """
-    Provide client for Redis.
-    """
+    """Provide client for Redis."""
 
     settings = get_app_settings()
 
@@ -71,9 +68,7 @@ class RedisClient(AbstractClient):
 
 
 class MongoDBClient(AbstractClient):
-    """
-    Provide client for MongoDB.
-    """
+    """Provide client for MongoDB."""
 
     settings = get_app_settings()
 
@@ -128,15 +123,13 @@ class ClientFacade:
         self._clients: dict[Client, type[AbstractClient]] = {}
 
     def register_client(self, name: Client, client: type[AbstractClient]) -> None:
-        """
-        Register client in state.
-        """
+        """Register client in state."""
+
         self._clients[name] = client
 
     def get_client(self, name: Client) -> AbstractClient:
-        """
-        Return registered client.
-        """
+        """Return registered client."""
+
         if not self._clients.get(name):
             raise ClientDoesNotExist()
         return self._clients[name]()

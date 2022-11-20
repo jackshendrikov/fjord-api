@@ -13,7 +13,11 @@ ENVIRONMENT = jinja2.Environment(
 
 
 class HomeEndpoint(HTTPEndpoint):
+    """Home Page of Fjord API"""
+
     async def get(self, request: Request) -> HTMLResponse:
+        """Return HTML template"""
+
         template = ENVIRONMENT.get_template("index.html.jinja")
         content = template.render(title="Fjord API")
         return HTMLResponse(content)

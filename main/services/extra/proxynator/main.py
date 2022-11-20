@@ -26,7 +26,7 @@ class Proxynator:
 
     async def _find_fresh_proxies(self) -> list[list[list[Proxy]]]:
         """
-        Start async proxies scraping for all crawlers and its corresponding URLS.
+        Start asynchronous proxy scans for all crawlers and their URLs.
         """
 
         crawler_tasks = [

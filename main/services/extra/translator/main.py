@@ -15,6 +15,8 @@ from main.services.extra.translator.providers import (
 
 class Translator:
     async def translate(self, item: TranslationIn) -> str:
+        """Get the translation of input text"""
+
         provider = self._get_provider_class(provider=item.provider)
         translation = await provider.get_translation(
             text=item.text,
@@ -26,6 +28,8 @@ class Translator:
         return translation
 
     async def detect_language(self, item: DetectionIn) -> str:
+        """Get the language definition based on the input text"""
+
         provider = self._get_provider_class(provider=item.provider)
         detection = await provider.detect(text=item.text)
         await provider.close()
@@ -39,6 +43,8 @@ class Translator:
         proxy: Proxy,
         texts: list[TextHashMap],
     ) -> list[TranslationMap]:
+        """Get translation of multiple texts"""
+
         trans_provider = self._get_provider_class(provider=provider)
 
         translations_tasks = [
@@ -59,13 +65,14 @@ class Translator:
 
     @staticmethod
     def _has_autodetect(provider: Provider) -> bool:
+        """Check if the provider has automatic language detection"""
+
         return isinstance(provider, (GoogleTranslateProvider, DeeplProvider))
 
     @staticmethod
     def _get_provider_class(provider: Provider) -> BaseTranslationProvider:
-        """
-        Return specific provider class.
-        """
+        """Return specific provider class."""
+
         provider_to_class_map: dict[str, type[BaseTranslationProvider]] = {
             Provider.GOOGLE_TRANSLATE: GoogleTranslateProvider,
             Provider.LIBRE_TRANSLATE: LibreTranslateProvider,

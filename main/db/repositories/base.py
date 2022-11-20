@@ -8,9 +8,7 @@ from main.db.errors import RepositoryDoesNotInit
 
 
 class BaseRedisRepository:
-    """
-    Base Redis repository.
-    """
+    """Base Redis repository."""
 
     def __init__(self) -> None:
         self._is_connected: bool = False
@@ -21,6 +19,7 @@ class BaseRedisRepository:
         """
         Provide connection to Redis.
         """
+
         if not self._is_connected:
             self._is_connected = True
             client: Redis = client_facade.get_client(name=Client.redis).connect()
@@ -29,9 +28,7 @@ class BaseRedisRepository:
 
 
 class BaseMongoRepository:
-    """
-    Base MongoDB repository.
-    """
+    """Base MongoDB repository."""
 
     db: str
     collection: str
@@ -46,6 +43,7 @@ class BaseMongoRepository:
         """
         Provide connection to MongoDB.
         """
+
         if not self._is_connected:
             self._is_connected = True
             client: MongoClient = client_facade.get_client(name=Client.mongo).connect()
@@ -57,5 +55,6 @@ class BaseMongoRepository:
         """
         Raise an error if repository attributes didn't set.
         """
+
         if not self.db or not self.collection:
             raise RepositoryDoesNotInit()

@@ -1,6 +1,5 @@
-"""
-Module configuration custom logger.
-"""
+"""Module configuration custom logger."""
+
 import logging
 
 from main.core.config import get_app_settings
@@ -14,9 +13,7 @@ settings = get_app_settings()
 
 
 class ProjectLogger:
-    """
-    Custom project logger.
-    """
+    """Custom project logger."""
 
     def __init__(self, name: str):
         self.name = name
@@ -27,17 +24,15 @@ class ProjectLogger:
 
     @property
     def logger(self) -> logging.Logger:
-        """
-        Return initialized logger object.
-        """
+        """Return initialized logger object."""
+
         if not self._logger:
             self._logger = self.create_logger()
         return self._logger
 
     def create_logger(self) -> logging.Logger:
-        """
-        Return configured logger.
-        """
+        """Return configured logger."""
+
         logging.basicConfig(format=LOG_MESSAGE_FORMAT)
 
         project_logger = logging.getLogger(name=self.name)
@@ -49,9 +44,8 @@ class ProjectLogger:
         return project_logger
 
     def _disable_loggers(self) -> None:
-        """
-        Disable 3rd parties loggers.
-        """
+        """Disable 3rd parties loggers."""
+
         for logger_name in DISABLE_LOGGERS:
             self._disable_logger(name=logger_name)
 
@@ -60,13 +54,13 @@ class ProjectLogger:
         """
         Set `CRITICAL` log level to disable logs from specific logger.
         """
+
         logging.getLogger(name=name).setLevel(logging.CRITICAL)
 
     @staticmethod
     def _setup_graylog(project_logger: logging.Logger) -> None:
-        """
-        Initialize Graylog handler.
-        """
+        """Initialize Graylog handler."""
+
         if settings.app_env != "test":
             from main.core.integrations import setup_graylog
 
@@ -79,9 +73,8 @@ class ProjectLogger:
 
 
 def _create_logger() -> logging.Logger:
-    """
-    Initialize logger for project.
-    """
+    """Initialize logger for project."""
+
     return ProjectLogger(name=DEFAULT_LOGGER_NAME)()
 
 

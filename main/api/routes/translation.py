@@ -32,9 +32,10 @@ async def get_translation(
     service: TranslationService = Depends(),
 ) -> Response:
     """Get single translation."""
+
     payload = TranslationIn(**locals())
     data = await service.get_translation(payload=payload)
-    return Response(data=data)
+    return Response(data=data, message="Successfully received the translation")
 
 
 @router.get("/detect", response_model=Response[DetectionOut])
@@ -48,7 +49,11 @@ async def get_source_language(
     ),
     service: TranslationService = Depends(),
 ) -> Response:
-    """Get single translation."""
+    """Get language of input text."""
+
     payload = DetectionIn(**locals())
     data = await service.get_source_language(payload=payload)
-    return Response(data=data)
+    return Response(
+        data=data,
+        message="The language of the input text has been successfully determined",
+    )

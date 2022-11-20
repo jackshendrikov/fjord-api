@@ -19,20 +19,23 @@ class BaseCrawler:
     urls: list[str] = []
 
     async def crawl(self) -> list[list[Proxy]]:
-        """
-        Proxy crawl method.
-        """
+        """Async proxy crawl method."""
+
         tasks = [
             asyncio.create_task(self._handle_proxies(url=url)) for url in self.urls
         ]
         return await asyncio.gather(*tasks)
 
     async def _handle_proxies(self, url: str) -> list[Proxy]:
+        """General method to process all proxies"""
+
         html = await self._make_request(url=url)
         proxies = self.parse(html=html)
         return await self._process_proxies(proxies)
 
     def parse(self, html: str) -> Iterator[Proxy]:
+        """Method to parse proxy from specific provider"""
+
         raise NotImplementedError
 
     @staticmethod
@@ -42,13 +45,15 @@ class BaseCrawler:
         """
         Make request to specific endpoint.
 
-        :param url: Specific URL.
-        :param timeout: Timeout for the Request.
-        :param verify: security certificate check in Request.
-        :param headers: Specific headers for the Request.
-        :return: Text response.
+        :param url: specific URL.
+        :param headers: request headers.
+        :param timeout: request timeout value.
+
+        :return: text response.
         """
-        connector = aiohttp.TCPConnector(limit=30)
+
+        # TODO: Remove connector
+        connector = aiohttp.TCPConnector(limit=100)
         async with aiohttp.ClientSession(
             headers=headers, connector=connector
         ) as session:
@@ -58,8 +63,9 @@ class BaseCrawler:
                 return await r.text()
 
     async def _process_proxies(self, proxy_list: Iterator[Proxy]) -> list[Proxy]:
-        connector = aiohttp.TCPConnector(limit=30)
-        async with aiohttp.ClientSession(connector=connector) as session:
+        """Run async tasks to validate proxies and return filtered result"""
+
+        async with aiohttp.ClientSession() as session:
             good_proxies = [
                 asyncio.create_task(self._check_proxy(session, proxy))
                 for proxy in proxy_list
@@ -71,6 +77,8 @@ class BaseCrawler:
     async def _check_proxy(
         session: aiohttp.ClientSession, proxy: Proxy
     ) -> Proxy | None:
+        """Check if proxy is valid (response returns the same address as the proxy)"""
+
         try:
             async with session.get(
                 PROXY_CHECK_URL, proxy=proxy.http_string, timeout=PROXY_CHECK_TIMEOUT

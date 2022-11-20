@@ -7,16 +7,14 @@ class Proxy(BaseModel):
 
     @property
     def string(self) -> str:
-        """
-        String representation of proxy.
-        """
+        """String representation of proxy."""
+
         return f"{self.host}:{self.port}"
 
     @property
     def http_string(self) -> str:
-        """
-        String representation of proxy.
-        """
+        """String HTTP representation of proxy."""
+
         return f"http://{self.host}:{self.port}"
 
 

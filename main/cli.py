@@ -3,9 +3,7 @@ import click
 
 @click.group()
 def cli() -> None:
-    """
-    Main click group.
-    """
+    """Main click group."""
 
 
 if __name__ == "__main__":

@@ -46,9 +46,11 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         :param text: The text to translate.
         :param source: The source language code (ISO 639).
         :param target: The target language code (ISO 639).
-        :param autodetect: Indicates whether the provider has its own language detection or whether a third-party service is needed.
+        :param autodetect: Indicates whether the provider has its own language detection
+                           or whether a third-party service is needed.
         :param proxy: proxy for request.
         :param text_hash: if present, then we need to return translation with original text + hash.
+
         :return: Translated text.
         """
 
@@ -99,15 +101,8 @@ class BaseTranslationProvider(metaclass=ABCMeta):
     async def _translate(
         self, text: str, source: str, target: str, proxy: str | None
     ) -> str:
-        """Translate specific string.
+        """A method for obtaining a text translation"""
 
-        :param text: The text to translate.
-        :param source: The source language code (ISO 639).
-        :param target: The target language code (ISO 639).
-        :param proxy: Specific proxy for the request.
-
-        :return: The translated text.
-        """
         raise NotImplementedError("Translation getter not implemented!")
 
     async def _make_request(
@@ -119,16 +114,8 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         proxy: str | None = None,
         return_json: bool = True,
     ) -> dict | str:
-        """
-        Make request to specific endpoint.
+        """Make request to specific endpoint."""
 
-        :param url: Specific URL.
-        :param params: Dictionary in the query string for the request.
-        :param data: Specific data for the request.
-        :param headers: Specific headers for the request.
-        :param proxy: Specific proxy for the request.
-        :return: Deserialized JSON response.
-        """
         if headers is None:
             headers = self.headers
 

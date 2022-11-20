@@ -15,11 +15,8 @@ class ProxyPoolRepository(BaseRedisRepository):
     """
 
     async def get_all_proxy(self) -> ProxiesList:
-        """
-        Get all proxies.
+        """Get all available proxies."""
 
-        :return: list of proxies.
-        """
         proxies = await self.connection.zrangebyscore(
             name=settings.redis_key,
             min=settings.proxy_score_min,
@@ -34,9 +31,8 @@ class ProxyPoolRepository(BaseRedisRepository):
         Firstly try to get proxy with max score.
             -> If not exists, try to get proxy by rank.
             -> If not exists, raise error.
-
-        :return: proxy, like 8.8.8.8:8.
         """
+
         # try to get proxy with max score
         proxies = await self.connection.zrangebyscore(
             name=settings.redis_key,
@@ -58,21 +54,14 @@ class ProxyPoolRepository(BaseRedisRepository):
         return None
 
     async def count_proxies(self) -> ProxyNumber:
-        """
-        Get count of proxies.
+        """Get amount of proxies."""
 
-        :return: count, int.
-        """
         proxy_num = await self.connection.zcard(name=settings.redis_key)
         return ProxyNumber(count=proxy_num)
 
     async def set_max_score(self, proxy: Proxy) -> int:
-        """
-        Set proxy to max score.
+        """Set proxy to max score."""
 
-        :param proxy: proxy.
-        :return: new score.
-        """
         if await self._is_proxy_exists(proxy=proxy):
             logger.info(f"{proxy.string} is valid, set to {settings.proxy_score_max}.")
             return await self.connection.zadd(
@@ -83,11 +72,9 @@ class ProxyPoolRepository(BaseRedisRepository):
 
     async def decrease_score(self, proxy: Proxy) -> None:
         """
-        Decrease score of proxy, if small than PROXY_SCORE_MIN, delete it.
-
-        :param proxy: proxy.
-        :return: new score.
+        Decrease score of proxy, if smaller than PROXY_SCORE_MIN, delete it.
         """
+
         if await self._is_proxy_exists(proxy=proxy):
             await self.connection.zincrby(
                 name=settings.redis_key, amount=-1, value=proxy.string
@@ -106,23 +93,16 @@ class ProxyPoolRepository(BaseRedisRepository):
     ) -> int:
         """
         Add proxy and set it to init score.
-
-        :param proxy: proxy, ip:port, like 8.8.8.8:88.
-        :param score: int score.
-        :return: result.
         """
+
         logger.info(f"{proxy.string} is valid, add it to Redis.")
         return await self.connection.zadd(
             name=settings.redis_key, mapping={proxy.string: score}
         )
 
     async def _is_proxy_exists(self, proxy: Proxy) -> bool:
-        """
-        Check if proxy exists.
+        """Check if proxy exists."""
 
-        :param proxy: proxy.
-        :return: if exists, bool.
-        """
         return (
             await self.connection.zscore(name=settings.redis_key, value=proxy.string)
             is not None

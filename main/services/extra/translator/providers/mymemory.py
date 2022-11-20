@@ -8,9 +8,8 @@ settings = get_app_settings()
 class MyMemoryProvider(BaseTranslationProvider):
     """
     @MyMemoryProvider: This is an integration with Translated MyMemory API.
-    Follow Information's:
-      Website: https://mymemory.translated.net/
-      Documentation: https://mymemory.translated.net/doc/spec.php
+    Website: https://mymemory.translated.net/
+    Documentation: https://mymemory.translated.net/doc/spec.php
     """
 
     base_url = "http://api.mymemory.translated.net/get"
