@@ -65,7 +65,8 @@ class BaseCrawler:
     async def _process_proxies(self, proxy_list: Iterator[Proxy]) -> list[Proxy]:
         """Run async tasks to validate proxies and return filtered result"""
 
-        async with aiohttp.ClientSession() as session:
+        connector = aiohttp.TCPConnector(limit=100)
+        async with aiohttp.ClientSession(connector=connector) as session:
             good_proxies = [
                 asyncio.create_task(self._check_proxy(session, proxy))
                 for proxy in proxy_list

@@ -76,6 +76,7 @@ class BaseTranslationProvider(metaclass=ABCMeta):
             )
         return translated_text
 
+    @async_session_handler(session=__session)
     async def detect(self, text: str, proxy: str | None = None) -> str:
         """
         Detect the language of a single text.

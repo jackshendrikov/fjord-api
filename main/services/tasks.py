@@ -83,7 +83,7 @@ class TranslationTasksService:
         """
 
         task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
-        return TranslationTaskStatus(task_id=task_id, state=task.state)
+        return TranslationTaskStatus(task_id=task_id, status=task.state)
 
     async def get_translation_csv(self, task_id: str) -> StringIO:
         """
