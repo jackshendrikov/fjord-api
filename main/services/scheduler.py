@@ -26,39 +26,41 @@ class TranslationTaskScheduler:
     _executor: TranslationTaskExecutor = TranslationTaskExecutor()
 
     @property
-    def queued_tasks(self) -> list[TranslationTask]:
+    async def queued_tasks(self) -> list[TranslationTask]:
         """Return list of currently queued tasks."""
 
-        return self._tasks_repository.get_tasks_with_state(state=TaskState.queued)
+        return await self._tasks_repository.get_tasks_with_state(state=TaskState.queued)
 
     @property
-    def active_tasks(self) -> list[TranslationTask]:
+    async def active_tasks(self) -> list[TranslationTask]:
         """Return list of currently consumed tasks."""
 
-        return self._tasks_repository.get_tasks_with_state(state=TaskState.consumed)
+        return await self._tasks_repository.get_tasks_with_state(
+            state=TaskState.consumed
+        )
 
     @property
-    def free_slots(self) -> int:
+    async def free_slots(self) -> int:
         """Return amount of free slots."""
 
-        return settings.max_concurrent_tasks - len(self.active_tasks)
+        return settings.max_concurrent_tasks - len(await self.active_tasks)
 
     async def run_translation_process(self) -> None:
         """General method for executing translation task."""
 
-        queued_tasks = self.queued_tasks
+        queued_tasks = await self.queued_tasks
         if not queued_tasks:
             logger.info("Queued translation tasks not found.")
             return
 
-        free_slots = self.free_slots
+        free_slots = await self.free_slots
         logger.info(f"Number of free translation slots: {free_slots}.")
 
         while free_slots > 0:
             task = queued_tasks.pop()
             logger.info(f"Starting to work with `{task.task_id}` task.")
 
-            self._tasks_repository.update_task_field(
+            await self._tasks_repository.update_task_field(
                 task_id=task.task_id, state=TaskState.consumed
             )
             logger.info(
@@ -71,11 +73,11 @@ class TranslationTaskScheduler:
                 self._notifier.send_notification(
                     error=NotifierError(task_id=task.task_id, error_msg=exc)
                 )
-                self._tasks_repository.update_task_field(
+                await self._tasks_repository.update_task_field(
                     task_id=task.task_id, state=TaskState.error
                 )
 
-            self._tasks_repository.update_task_field(
+            await self._tasks_repository.update_task_field(
                 task_id=task.task_id, state=TaskState.ready
             )
             free_slots -= 1

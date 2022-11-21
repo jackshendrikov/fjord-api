@@ -1,7 +1,5 @@
 from aioredis import Redis
-from pymongo import MongoClient
-from pymongo.collection import Collection
-from pymongo.database import Database
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 
 from main.db.clients import Client, client_facade
 from main.db.errors import RepositoryDoesNotInit
@@ -35,20 +33,21 @@ class BaseMongoRepository:
 
     def __init__(self) -> None:
         self._is_connected: bool = False
-        self._conn: Collection | None = None
+        self._conn: AsyncIOMotorCollection | None = None
         self._check_init_params()
 
     @property
-    def connection(self) -> Collection:
+    def connection(self) -> AsyncIOMotorCollection:
         """
         Provide connection to MongoDB.
         """
 
         if not self._is_connected:
             self._is_connected = True
-            client: MongoClient = client_facade.get_client(name=Client.mongo).connect()
-            db: Database = client[self.db]
-            self._conn = db[self.collection]
+            client: AsyncIOMotorClient = client_facade.get_client(
+                name=Client.mongo
+            ).connect()
+            self._conn = client[self.db][self.collection]
         return self._conn
 
     def _check_init_params(self) -> None:

@@ -45,6 +45,8 @@ class Translator:
     ) -> list[TranslationMap]:
         """Get translation of multiple texts"""
 
+        # TODO: Seems like session does not close, but why?
+
         trans_provider = self._get_provider_class(provider=provider)
 
         translations_tasks = [

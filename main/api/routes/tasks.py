@@ -24,19 +24,19 @@ router = APIRouter()
 
 
 @router.get("", response_model=Response[TranslationTasksList])
-def get_all_task(
+async def get_all_task(
     limit: int = settings.default_pagination_limit,
     offset: int = 0,
     service: TranslationTasksService = Depends(),
 ) -> Response:
     """Retrieve all translation tasks."""
 
-    tasks = service.get_all_tasks(limit=limit, offset=offset)
+    tasks = await service.get_all_tasks(limit=limit, offset=offset)
     return Response(data=tasks, message="Translation tasks retrieved successfully")
 
 
 @router.post("", response_model=Response[TranslationTask])
-def set_task(
+async def set_task(
     link: HttpUrl = Query(
         description="Ordinary Google Sheet URL, should contain `gid` param in path"
     ),
@@ -94,7 +94,7 @@ def set_task(
             status_code=400,
         )
 
-    task = service.create_task(
+    task = await service.create_task(
         payload=TranslationRunPayload(
             source_language=source_language,
             target_language=target_language,
@@ -107,28 +107,32 @@ def set_task(
 
 
 @router.get("/{task_id}", response_model=Response[TranslationTask])
-def get_task(task_id: str, service: TranslationTasksService = Depends()) -> Response:
+async def get_task(
+    task_id: str, service: TranslationTasksService = Depends()
+) -> Response:
     """Retrieve translation task by `task_id`."""
 
-    task = service.get_task(task_id=task_id)
+    task = await service.get_task(task_id=task_id)
     return Response(data=task, message="Translation task retrieved successfully")
 
 
 @router.delete("/{task_id}", response_model=Response[TranslationTask])
-def delete_task(task_id: str, service: TranslationTasksService = Depends()) -> Response:
+async def delete_task(
+    task_id: str, service: TranslationTasksService = Depends()
+) -> Response:
     """Soft delete translation task by `task_id`."""
 
-    task = service.delete_task(task_id=task_id)
+    task = await service.delete_task(task_id=task_id)
     return Response(data=task, message="Translation task deleted successfully")
 
 
 @router.get("/{task_id}/status", response_model=Response[TranslationTaskStatus])
-def get_task_status(
+async def get_task_status(
     task_id: str, service: TranslationTasksService = Depends()
 ) -> Response:
     """Retrieve translation task status by `task_id`."""
 
-    task = service.get_task_status(task_id=task_id)
+    task = await service.get_task_status(task_id=task_id)
     return Response(data=task, message="Translation task status retrieved successfully")
 
 

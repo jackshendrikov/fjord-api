@@ -21,7 +21,7 @@ class TranslationTasksService:
 
     _tasks_repository: TranslationTasksRepository = TranslationTasksRepository()
 
-    def create_task(self, payload: TranslationRunPayload) -> TranslationTask:
+    async def create_task(self, payload: TranslationRunPayload) -> TranslationTask:
         """
         Create translation task.
 
@@ -32,11 +32,11 @@ class TranslationTasksService:
         task = TranslationTask(
             task_id=generate_task_id(), payload=payload, state=TaskState.queued
         )
-        self._tasks_repository.insert_translation_task(task=task)
+        await self._tasks_repository.insert_translation_task(task=task)
 
         return task
 
-    def get_all_tasks(self, limit: int, offset: int) -> TranslationTasksList:
+    async def get_all_tasks(self, limit: int, offset: int) -> TranslationTasksList:
         """
         Return all translation tasks with specific `offset`.
 
@@ -45,12 +45,14 @@ class TranslationTasksService:
         :return: Object with tasks list and current pagination metadata.
         """
 
-        total, tasks = self._tasks_repository.find_all_tasks(limit=limit, offset=offset)
+        total, tasks = await self._tasks_repository.find_all_tasks(
+            limit=limit, offset=offset
+        )
         return TranslationTasksList(
             tasks=tasks, meta={"total_tasks": total, "limit": limit, "offset": offset}
         )
 
-    def get_task(self, task_id: str) -> TranslationTask:
+    async def get_task(self, task_id: str) -> TranslationTask:
         """
         Return translation task by `task_id` field or raise an exception if not found.
 
@@ -58,9 +60,9 @@ class TranslationTasksService:
         :return: Translation task.
         """
 
-        return self._tasks_repository.find_task_by_task_id(task_id=task_id)
+        return await self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
-    def delete_task(self, task_id: str) -> TranslationTask:
+    async def delete_task(self, task_id: str) -> TranslationTask:
         """
         Return translation task by `task_id` field or raise an exception if not found.
 
@@ -68,13 +70,13 @@ class TranslationTasksService:
         :return: Translation task.
         """
 
-        self._tasks_repository.update_task_field(
+        await self._tasks_repository.update_task_field(
             task_id=task_id, state=TaskState.deleted
         )
 
-        return self._tasks_repository.find_task_by_task_id(task_id=task_id)
+        return await self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
-    def get_task_status(self, task_id: str) -> TranslationTaskStatus:
+    async def get_task_status(self, task_id: str) -> TranslationTaskStatus:
         """
         Return translation task status by `task_id` field or raise an exception if not found.
 
@@ -82,7 +84,7 @@ class TranslationTasksService:
         :return: Task Status for Translation task.
         """
 
-        task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
+        task = await self._tasks_repository.find_task_by_task_id(task_id=task_id)
         return TranslationTaskStatus(task_id=task_id, status=task.state)
 
     async def get_translation_csv(self, task_id: str) -> StringIO:
@@ -93,7 +95,7 @@ class TranslationTasksService:
 
         :return: streaming response.
         """
-        task = self._tasks_repository.find_task_by_task_id(task_id=task_id)
+        task = await self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
         df = pd.read_csv(task.payload.link)
         stream = StringIO()

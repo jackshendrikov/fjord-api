@@ -7,7 +7,7 @@ from main.schemas.proxies import Proxy
 from main.services.extra.proxynator.crawlers import BaseCrawler
 
 settings = get_app_settings()
-base_url = "https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-{page}/"
+base_url = "https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-{page}"
 
 
 class ProxyListPlusCrawler(BaseCrawler):

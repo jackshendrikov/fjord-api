@@ -166,5 +166,6 @@ class TranslationTaskExecutor:
         Check if hash of original text is presented in DB.
         """
 
+        # TODO: Change logic (not good if we want to translate original text to different language)
         if not await Translation.exists().where(Translation.text_hash == item.hash):
             return item

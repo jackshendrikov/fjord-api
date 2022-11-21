@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 
 from aioredis import ConnectionError, Redis, from_url
-from pymongo import MongoClient, errors
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from main.core.config import get_app_settings
 from main.core.logging import logger
@@ -24,7 +24,7 @@ class AbstractClient(ABC):
     """
 
     @abstractmethod
-    def connect(self) -> Redis | MongoClient:
+    def connect(self) -> Redis | AsyncIOMotorClient:
         """Return client object."""
 
         raise NotImplementedError()
@@ -72,7 +72,7 @@ class MongoDBClient(AbstractClient):
 
     settings = get_app_settings()
 
-    def connect(self) -> MongoClient:
+    def connect(self) -> AsyncIOMotorClient:
         """
         Make connection to MongoDB and return client.
         """
@@ -92,23 +92,15 @@ class MongoDBClient(AbstractClient):
         username: str | None,
         password: str | None,
         auth_source: str | None,
-    ) -> MongoClient:
+    ) -> AsyncIOMotorClient:
         """
         Return MongoDB client based on init arguments.
         """
 
-        mongo_kwargs = {"host": host, "port": port, "serverSelectionTimeoutMS": 10000}
-        if username and password:
-            mongo_kwargs.update({"username": username, "password": password})
-        if auth_source:
-            mongo_kwargs.update({"authSource": auth_source})
-
-        client = MongoClient(**mongo_kwargs)
-        try:
-            client.admin.command("ping")
-        except errors.ServerSelectionTimeoutError:
-            raise ClientConnectionError(f"Can not connect to MongoDB server: {host}")
-
+        database_url = (
+            f"mongodb://{username}:{password}@{host}:{port}/?authSource={auth_source}"
+        )
+        client = AsyncIOMotorClient(database_url, uuidRepresentation="standard")
         logger.debug(f"Successfully connected to Mongo server: {host}")
 
         return client

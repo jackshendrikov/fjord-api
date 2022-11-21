@@ -4,12 +4,23 @@ tag.src = "https://www.youtube.com/iframe_api";
 let firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+const songs = [
+	'VLsSJyrA1WE',
+	'Hkg8uiRadpM',
+	'KKGlCPbdnGE',
+	'xn7ZEctSYSw',
+	'Cy44ocuoWhE',
+	'fZgAA0T51Rc',
+	'zEv5xrIjIMo',
+]
+const random = Math.floor(Math.random() * songs.length);
+
 let player;
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
 		height: '1',
 		width: '1',
-		videoId: 'VLsSJyrA1WE',
+		videoId: songs[random],
 		suggestedQuality: 'small',
         events: {
             'onReady': onPlayerReady
