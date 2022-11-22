@@ -52,8 +52,7 @@ class BaseCrawler:
         :return: text response.
         """
 
-        # TODO: Remove connector
-        connector = aiohttp.TCPConnector(limit=30)
+        connector = aiohttp.TCPConnector(limit=settings.tcp_connector_limit)
         async with aiohttp.ClientSession(
             headers=headers, connector=connector
         ) as session:
@@ -65,7 +64,7 @@ class BaseCrawler:
     async def _process_proxies(self, proxy_list: Iterator[Proxy]) -> list[Proxy]:
         """Run async tasks to validate proxies and return filtered result"""
 
-        connector = aiohttp.TCPConnector(limit=30)
+        connector = aiohttp.TCPConnector(limit=settings.tcp_connector_limit)
         async with aiohttp.ClientSession(connector=connector) as session:
             good_proxies = [
                 asyncio.create_task(self._check_proxy(session, proxy))

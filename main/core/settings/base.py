@@ -54,6 +54,12 @@ class BaseAppSettings(BaseSettings):
     # Scheduler background task interval.
     scheduler_task_interval: int
 
+    # Limit aiohttp connections
+    tcp_connector_limit: int
+
+    # Number of async translation tasks to run
+    async_translation_tasks_num: int
+
     # Flag enable/disable background tasks on startup.
     run_background_tasks: bool
 

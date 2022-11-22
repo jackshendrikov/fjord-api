@@ -183,6 +183,9 @@ If necessary, you can download the translations attached to the original Google 
     MYMEMORY_EMAIL=<email-for-mymemory>
     DETECT_LANGUAGE_API_KEY=<detect-language-api-key>
 
+    TCP_CONNECTOR_LIMIT=<tcp-connector-limit>
+    ASYNC_TRANSLATION_TASKS_NUM=<async-translation-tasks-num>
+
     MAX_CONCURRENT_TASKS=<max-concurrent-tasks>
     RUN_BACKGROUND_TASKS=<1|0>
     SCHEDULER_TASK_INTERVAL=<seconds-interval>

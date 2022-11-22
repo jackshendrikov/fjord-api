@@ -2,7 +2,7 @@ import asyncio
 
 import pandas as pd
 
-from main.const.common import ASYNC_TRANSLATION_TEXTS, READ_CSV_CHUNK_SIZE, Language
+from main.const.common import READ_CSV_CHUNK_SIZE, Language
 from main.const.translator import DEFAULT_PROVIDER, Provider, TextHashMap
 from main.core.config import get_app_settings
 from main.core.exceptions import PoolEmptyException
@@ -77,7 +77,7 @@ class TranslationTaskExecutor:
         and run these packs for asynchronous translation.
         """
 
-        for texts_pack in chunks(texts, size=ASYNC_TRANSLATION_TEXTS):
+        for texts_pack in chunks(texts, size=settings.async_translation_tasks_num):
             logger.info(f"Going to translate pack of {len(texts_pack)} texts..")
             await self._get_translation(
                 provider=payload.provider,
