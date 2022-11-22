@@ -51,23 +51,30 @@ class TranslationTaskExecutor:
             chunksize=READ_CSV_CHUNK_SIZE,
         ):
             for column in payload.columns_to_translate:
+                texts = chunk[column].astype(str).unique()
                 try:
-                    texts = await self._get_texts_to_translate(
-                        texts=chunk[column].unique()
+                    await self._handle_translation_start(
+                        input_texts=texts, payload=payload
                     )
-                    await self._process_translation_texts(texts=texts, payload=payload)
                 except TranslationError as e:
                     if payload.provider != DEFAULT_PROVIDER:
                         payload.provider = DEFAULT_PROVIDER  # type: ignore
-                        texts = await self._get_texts_to_translate(
-                            texts=chunk[column].unique()
-                        )
-                        await self._process_translation_texts(
-                            texts=texts, payload=payload
+                        await self._handle_translation_start(
+                            input_texts=texts, payload=payload
                         )
                     else:
                         raise e
                 logger.info(f"Successfully translated {len(chunk)} texts..")
+
+    async def _handle_translation_start(
+        self, input_texts: set[str], payload: TranslationRunPayload
+    ) -> None:
+        texts = await self._get_texts_to_translate(
+            texts=input_texts,
+            source=payload.source_language,
+            target=payload.target_language,
+        )
+        await self._process_translation_texts(texts=texts, payload=payload)
 
     async def _process_translation_texts(
         self, texts: list[TextHashMap], payload: TranslationRunPayload
@@ -101,7 +108,7 @@ class TranslationTaskExecutor:
         If the proxy pool is empty, start the proxy collection process and repeat whole process.
         """
 
-        # TODO: Think about keep session for stable proxy more than on 1 async batch
+        # TODO: Think how to speed up iteration through proxies
 
         try:
             proxy = await self._proxy_service.get_random_proxy()
@@ -120,8 +127,6 @@ class TranslationTaskExecutor:
                 proxy=proxy,
             )
 
-            # TODO: If source is autodetect - replace it with detection result (or not)
-
             translations = [
                 Translation(
                     original=item.original,
@@ -133,6 +138,8 @@ class TranslationTaskExecutor:
                 )
                 for item in translated_items
             ]
+
+            await self._proxies_repository.set_score(proxy=proxy, set_max=True)
             logger.info(f"Successfully translated {len(translations)} texts!")
             await Translation.insert(*translations)
         except TranslationRequestError:
@@ -142,11 +149,19 @@ class TranslationTaskExecutor:
                 provider=provider, source=source, target=target, texts=texts
             )
 
-    async def _get_texts_to_translate(self, texts: set[str]) -> list[TextHashMap]:
+    async def _get_texts_to_translate(
+        self, texts: set[str], source: Language, target: Language
+    ) -> list[TextHashMap]:
         """Returns filtered texts to translate"""
 
         texts_to_translate = [
-            TextHashMap(original=text, hash=get_text_hash(text=text)) for text in texts
+            TextHashMap(
+                original=text,
+                hash=get_text_hash(text=text),
+                source=source,
+                target=target,
+            )
+            for text in texts
         ]
         return await self._filter_texts(items=texts_to_translate)
 
@@ -156,6 +171,7 @@ class TranslationTaskExecutor:
         Those whose hash is already in the database are considered unnecessary
         """
 
+        # TODO: Update filtration (delete text if len < 3 or Not Mentioned, add hashtag process)
         tasks = [asyncio.create_task(self._is_item_exist(item=item)) for item in items]
         texts = await asyncio.gather(*tasks)
         return [text for text in texts if text is not None]
@@ -166,6 +182,9 @@ class TranslationTaskExecutor:
         Check if hash of original text is presented in DB.
         """
 
-        # TODO: Change logic (not good if we want to translate original text to different language)
-        if not await Translation.exists().where(Translation.text_hash == item.hash):
+        if not await Translation.exists().where(
+            (Translation.text_hash == item.hash)
+            & (Translation.source == item.source)
+            & (Translation.target == item.target)
+        ):
             return item

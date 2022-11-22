@@ -69,7 +69,7 @@ class Translator:
     def _has_autodetect(provider: Provider) -> bool:
         """Check if the provider has automatic language detection"""
 
-        return isinstance(provider, (GoogleTranslateProvider, DeeplProvider))
+        return provider in (Provider.DEEPL, Provider.GOOGLE_TRANSLATE)
 
     @staticmethod
     def _get_provider_class(provider: Provider) -> BaseTranslationProvider:

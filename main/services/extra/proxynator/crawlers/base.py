@@ -1,4 +1,5 @@
 import asyncio
+from asyncio.exceptions import TimeoutError
 from collections.abc import Iterator
 
 import aiohttp

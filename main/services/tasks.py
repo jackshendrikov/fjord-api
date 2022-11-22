@@ -3,7 +3,7 @@ from io import StringIO
 
 import pandas as pd
 
-from main.const.common import TaskState
+from main.const.common import Language, TaskState
 from main.db.models.postgres import Translation
 from main.db.repositories.tasks import TranslationTasksRepository
 from main.schemas.tasks import (
@@ -102,7 +102,14 @@ class TranslationTasksService:
 
         for column in task.payload.columns_to_translate:
             df[f"{column}_translated"] = await asyncio.gather(
-                *(self._get_translation(v) for v in df[column])
+                *(
+                    self._get_translation(
+                        text=v,
+                        source=task.payload.source_language,
+                        target=task.payload.target_language,
+                    )
+                    for v in df[column]
+                )
             )
 
         df.to_csv(stream, index=False)
@@ -110,10 +117,16 @@ class TranslationTasksService:
         return stream
 
     @staticmethod
-    async def _get_translation(text: str) -> str | None:
+    async def _get_translation(
+        text: str, source: Language, target: Language
+    ) -> str | None:
         """Map translation with original text hash"""
 
         text_hash = get_text_hash(text=text)
-        item = await Translation.objects().get(Translation.text_hash == text_hash)
+        item = await Translation.objects().get(
+            (Translation.text_hash == text_hash)
+            & (Translation.source == source)
+            & (Translation.target == target)
+        )
         if item:
             return item.translated

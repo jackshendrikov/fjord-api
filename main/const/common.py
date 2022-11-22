@@ -13,6 +13,11 @@ class Language(StrEnum):
     GE = "de"
     NO = "no"
     UA = "uk"
+    pt = "pt"
+
+    @classmethod
+    def has_value(cls, value: str) -> bool:
+        return value in cls._value2member_map_
 
 
 class TaskState(StrEnum):
@@ -36,4 +41,4 @@ DEFAULT_HEADERS = {
 GOOGLE_SHEET_HOST = "docs.google.com"
 GOOGLE_SPREADSHEET_ID_LEN = 44
 
-READ_CSV_CHUNK_SIZE = 10000
+READ_CSV_CHUNK_SIZE = 1000

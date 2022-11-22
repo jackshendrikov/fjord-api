@@ -72,7 +72,7 @@ class BaseAppSettings(BaseSettings):
 
     # Proxy settings
     log_proxies: bool = False
-    proxy_score_max = 1
+    proxy_score_max = 10
     proxy_score_min = 0
     proxy_score_init = 1
     proxy_service_max_page = 2

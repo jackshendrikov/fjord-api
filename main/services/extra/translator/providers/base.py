@@ -19,10 +19,11 @@ class BaseTranslationProvider(metaclass=ABCMeta):
     base_url = ""
     chars_limit = 5000
 
-    __session = ClientSession()
-
     timeout = DEFAULT_TIMEOUT
     headers = DEFAULT_HEADERS
+
+    def __init__(self) -> None:
+        self.__session = ClientSession()
 
     @property
     def _session(self) -> ClientSession:
@@ -30,7 +31,7 @@ class BaseTranslationProvider(metaclass=ABCMeta):
             self.__session = ClientSession()
         return self.__session
 
-    @async_session_handler(session=__session)
+    @async_session_handler
     async def get_translation(
         self,
         text: str,
@@ -71,12 +72,13 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         translated_text = " ".join(translations).strip()
 
         if text_hash:
+            # TODO: Is it worth to make extra request to detect actual language if autodetect?
             return TranslationMap(
                 original=text, translation=translated_text, hash=text_hash
             )
         return translated_text
 
-    @async_session_handler(session=__session)
+    @async_session_handler
     async def detect(self, text: str, proxy: str | None = None) -> str:
         """
         Detect the language of a single text.
@@ -150,4 +152,4 @@ class BaseTranslationProvider(metaclass=ABCMeta):
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-        loop.create_task(self.__session.close())
+        loop.create_task(self.close())

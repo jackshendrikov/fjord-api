@@ -4,7 +4,7 @@ from asyncio.exceptions import TimeoutError
 from collections.abc import Callable
 from typing import Any
 
-from aiohttp import ClientError, ClientSession
+from aiohttp import ClientError
 from aiohttp.web import HTTPError
 
 
@@ -20,25 +20,22 @@ class TranslationRequestError(Exception):
     """
 
 
-CLIENT_EXCEPTIONS = (HTTPError, ClientError, TimeoutError)
+CLIENT_EXCEPTIONS = (HTTPError, ClientError, TimeoutError, AttributeError)
 
 
-def async_session_handler(session: ClientSession) -> Callable:
+def async_session_handler(func: Callable) -> Callable:
     """
     Decorator that handles possible errors during the translation process.
     """
 
-    def decorator(func: Callable) -> Callable:
-        async def wrapper(*args: Any, **kwargs: Any) -> Any:
-            try:
-                return await func(*args, **kwargs)
-            except CLIENT_EXCEPTIONS as e:
-                await session.close()
-                raise TranslationRequestError(e)
-            except Exception as e:
-                await session.close()
-                raise TranslationError(e)
+    async def wrapper(self, *args: Any, **kwargs: Any) -> Any:  # type: ignore
+        try:
+            return await func(self, *args, **kwargs)
+        except CLIENT_EXCEPTIONS as e:
+            await self.close()
+            raise TranslationRequestError(e)
+        except Exception as e:
+            await self.close()
+            raise TranslationError(e)
 
-        return wrapper
-
-    return decorator
+    return wrapper

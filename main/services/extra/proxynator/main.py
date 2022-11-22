@@ -16,7 +16,7 @@ class Proxynator:
 
         proxies_to_add = await self._find_fresh_proxies()
         proxies_to_add = [
-            self._proxies_repository.set_max_score(proxy=proxy)
+            self._proxies_repository.set_score(proxy=proxy)
             for proxy_packs in proxies_to_add
             for proxy_pack in proxy_packs
             for proxy in proxy_pack

@@ -23,11 +23,13 @@ class Provider(StrEnum):
 class TextHashMap:
     original: str
     hash: str
+    source: Language | None = None
+    target: Language | None = None
 
 
 @dataclass
 class TranslationMap(TextHashMap):
-    translation: str
+    translation: str = ""
 
 
 DEFAULT_PROVIDER = Provider.GOOGLE_TRANSLATE

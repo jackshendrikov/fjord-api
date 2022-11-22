@@ -59,14 +59,14 @@ class ProxyPoolRepository(BaseRedisRepository):
         proxy_num = await self.connection.zcard(name=settings.redis_key)
         return ProxyNumber(count=proxy_num)
 
-    async def set_max_score(self, proxy: Proxy) -> int:
-        """Set proxy to max score."""
+    async def set_score(self, proxy: Proxy, set_max: bool = False) -> int:
+        """Set proxy to init or max score."""
 
         if await self._is_proxy_exists(proxy=proxy):
-            logger.info(f"{proxy.string} is valid, set to {settings.proxy_score_max}.")
+            score = settings.proxy_score_max if set_max else settings.proxy_score_init
+            logger.info(f"{proxy.string} is valid, set to {score}.")
             return await self.connection.zadd(
-                name=settings.redis_key,
-                mapping={proxy.string: settings.proxy_score_max},
+                name=settings.redis_key, mapping={proxy.string: score}
             )
         return await self._add_proxy(proxy=proxy)
 
