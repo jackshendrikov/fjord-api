@@ -13,6 +13,6 @@ ENV PYTHONPATH "${PYTHONPATH}:/main"
 COPY main main/
 
 # Expose ports
-EXPOSE 8080
+EXPOSE 5000
 
-CMD ["uvicorn", "main.app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main.app:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]

@@ -23,7 +23,7 @@ services:
 
   mongodb:
     container_name: mongo
-    image: mongo:4.4.6
+    image: mongo:5.0.14
     ports:
       - "27017:27017"
     volumes:
