@@ -164,11 +164,9 @@ If necessary, you can download the translations attached to the original Google 
     REDIS_KEY=<redis-key>
 
     MONGO_HOST=<mongo-host>
-    MONGO_PORT=<mongo-port>
     MONGO_DB=<mongo-db>
     MONGO_USER=<mongo-user>
     MONGO_PASSWORD=<mongo-password>
-    MONGO_AUTH_SOURCE=<mongo-auth-source>
     MONGO_TASKS_COLLECTION=<mongo-tasks-collection>
 
     POSTGRES_HOST=<postgres-host>

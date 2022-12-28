@@ -79,26 +79,20 @@ class MongoDBClient(AbstractClient):
 
         return self._get_client(
             host=self.settings.mongo_host,
-            port=self.settings.mongo_port,
             username=self.settings.mongo_user,
             password=self.settings.mongo_password,
-            auth_source=self.settings.mongo_auth_source,
         )
 
     @staticmethod
     def _get_client(
-        host: str,
-        port: int,
-        username: str | None,
-        password: str | None,
-        auth_source: str | None,
+        host: str, username: str | None, password: str | None
     ) -> AsyncIOMotorClient:
         """
         Return MongoDB client based on init arguments.
         """
 
         database_url = (
-            f"mongodb://{username}:{password}@{host}:{port}/?authSource={auth_source}"
+            f"mongodb+srv://{username}:{password}@{host}/?retryWrites=true&w=majority"
         )
         client = AsyncIOMotorClient(database_url, uuidRepresentation="standard")
         logger.debug(f"Successfully connected to Mongo server: {host}")

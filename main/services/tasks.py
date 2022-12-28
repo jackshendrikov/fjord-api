@@ -97,7 +97,7 @@ class TranslationTasksService:
         """
         task = await self._tasks_repository.find_task_by_task_id(task_id=task_id)
 
-        df = pd.read_csv(task.payload.link)
+        df = pd.read_csv(task.payload.link, usecols=task.payload.columns_to_translate)
         stream = StringIO()
 
         for column in task.payload.columns_to_translate:
@@ -108,7 +108,7 @@ class TranslationTasksService:
                         source=task.payload.source_language,
                         target=task.payload.target_language,
                     )
-                    for v in df[column]
+                    for v in df[column].astype(str)
                 )
             )
 

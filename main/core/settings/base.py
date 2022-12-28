@@ -24,11 +24,9 @@ class BaseAppSettings(BaseSettings):
 
     # Mongo ENV variables.
     mongo_host: str
-    mongo_port: int
     mongo_db: str
     mongo_user: str | None
     mongo_password: str | None
-    mongo_auth_source: str | None
     mongo_tasks_collection: str
 
     # Postgres ENV variables
