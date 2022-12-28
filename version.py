@@ -1,5 +1,5 @@
 __status__ = True
-__version__ = "0.0.14"
+__version__ = "0.0.15"
 __message__ = "Fjord API"
 
 response = {"success": __status__, "version": __version__, "message": __message__}
