@@ -1,9 +1,9 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 RUN mkdir /code
 WORKDIR /code
 
-COPY requirements.txt requirements-prod.txt version.py ./
+COPY requirements.txt requirements-prod.txt piccolo_conf.py version.py ./
 
 RUN pip install -U pip
 RUN pip install -r requirements-prod.txt
