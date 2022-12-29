@@ -19,5 +19,5 @@ class HomeEndpoint(HTTPEndpoint):
         """Return HTML template"""
 
         template = ENVIRONMENT.get_template("index.html.jinja")
-        content = template.render(title="Fjord API")
+        content = template.render(title="Fjord API", app_url=request.url)
         return HTMLResponse(content)

@@ -16,7 +16,7 @@ const songs = [
 const random = Math.floor(Math.random() * songs.length);
 
 let player;
-function onYouTubeIframeAPIReady() {
+window.onYouTubeIframeAPIReady = function() {
     player = new YT.Player('player', {
 		height: '1',
 		width: '1',
@@ -29,6 +29,8 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
+	$(".loader-wrapper").hide();
+	$("#app").css("display", "block");
     event.target.setVolume(50);
 }
 
