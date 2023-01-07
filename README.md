@@ -168,6 +168,7 @@ If necessary, you can download the translations attached to the original Google 
     MONGO_USER=<mongo-user>
     MONGO_PASSWORD=<mongo-password>
     MONGO_TASKS_COLLECTION=<mongo-tasks-collection>
+    MONGO_USERS_COLLECTION=<mongo-users-collection>
 
     POSTGRES_HOST=<postgres-host>
     POSTGRES_PORT=<postgres-port>
@@ -276,6 +277,7 @@ fjord-api
 │   ├── api                             # this houses for API packages
 │   │   ├── routes                      # this is where all the routes live
 │   │   │   ├── __init__.py             # empty init file to make the routes folder a package
+│   │   │   ├── auth.py                 # module with auth endpoint
 │   │   │   ├── proxies.py              # module with proxy utils endpoint
 │   │   │   ├── status.py               # module with health check endpoint
 │   │   │   ├── tasks.py                # module with endpoints to handle translation task
@@ -308,9 +310,11 @@ fjord-api
 │   │   │   └── test.py                 # test app settings
 │   │   ├── __init__.py                 # empty init file to make the config folder a package
 │   │   ├── config.py                   # sample config file
+│   │   ├── dependencies.py             # auth dependency
 │   │   ├── exceptions.py               # app exception handlers
 │   │   ├── integrations.py             # module for project 3rd parties services
-│   │   └── logging.py                  # module configuration custom logger
+│   │   ├── logging.py                  # module configuration custom logger
+│   │   └── security.py                 # auth security utils
 │   ├── db                              # this is where the repositories logic live
 │   │   ├── models                      # postgres models
 │   │   │   ├── __init__.py             # empty init file to make the models folder a package
@@ -319,13 +323,15 @@ fjord-api
 │   │   │   ├── __init__.py             # empty init file to make the repositories folder a package
 │   │   │   ├── base.py                 # contains base repositories classes
 │   │   │   ├── proxies.py              # repository to manipulate with proxies in Redis
-│   │   │   └── tasks.py                # repository to manipulate with translation tasks from Mongo collection
+│   │   │   ├── tasks.py                # repository to manipulate with translation tasks from Mongo collection
+│   │   │   └── users.py                # repository to manipulate with users from Mongo collection
 │   │   ├── __init__.py                 # empty init file to make the repositories folder a package
 │   │   ├── clients.py                  # provide client for MongoDB, Elasticsearch, etc.
 │   │   ├── connections.py              # process Postgres database connections
 │   │   └── errors.py                   # module for custom database errors
 │   ├── schemas                         # this is where the schemas live
 │   │   ├── __init__.py                 # empty init file to make the schemas folder a package
+│   │   ├── auth.py                     # users item schema
 │   │   ├── common.py                   # contains common schemas
 │   │   ├── notifier.py                 # notifier error schema
 │   │   ├── proxies.py                  # proxy item schema
@@ -358,6 +364,7 @@ fjord-api
 │   │   │   │   ├── __init__.py         # empty init file to make the proxynator folder a package
 │   │   │   │   └── main.py             # general logic to get single/multiple translations
 │   │   │   ├── __init__.py             # empty init file to make the extra folder a package
+│   │   │   ├── auth.py                 # handles users auth
 │   │   │   ├── errors.py               # handles async sessions and possible errors
 │   │   │   └── notifier.py             # service for sending notifications to Telegram
 │   │   ├── __init__.py                 # empty init file to make the services folder a package
@@ -385,7 +392,7 @@ fjord-api
 ├── requirements-prod.txt               # pinned prod dependencies
 ├── requirements.txt                    # pinned app dependencies
 ├── setup.cfg                           # linter config file
-└── version.py                          # app version file
+└── version.py                          # app version file                      # app version file
 ```
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)

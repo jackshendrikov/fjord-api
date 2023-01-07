@@ -5,7 +5,7 @@ import pkgutil
 from main.services.extra.proxynator.crawlers.base import BaseCrawler
 
 classes = []
-for loader, name, is_pkg in pkgutil.walk_packages(__path__):  # type: ignore
+for loader, name, is_pkg in pkgutil.walk_packages(__path__):
     module = loader.find_module(name).load_module(name)  # type: ignore
     for title, value in inspect.getmembers(module):
         globals()[title] = value
@@ -16,4 +16,4 @@ for loader, name, is_pkg in pkgutil.walk_packages(__path__):  # type: ignore
             and not getattr(value, "ignore", False)
         ):
             classes.append(value)
-__all__ = __ALL__ = classes
+__all__ = __ALL__ = classes  # type: ignore
