@@ -28,6 +28,7 @@ class BaseAppSettings(BaseSettings):
     mongo_user: str | None
     mongo_password: str | None
     mongo_tasks_collection: str
+    mongo_users_collection: str
 
     # Postgres ENV variables
     postgres_host: str

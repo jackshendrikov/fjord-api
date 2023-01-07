@@ -168,6 +168,7 @@ If necessary, you can download the translations attached to the original Google 
     MONGO_USER=<mongo-user>
     MONGO_PASSWORD=<mongo-password>
     MONGO_TASKS_COLLECTION=<mongo-tasks-collection>
+ 	MONGO_USERS_COLLECTION=<mongo-users-collection>
 
     POSTGRES_HOST=<postgres-host>
     POSTGRES_PORT=<postgres-port>
