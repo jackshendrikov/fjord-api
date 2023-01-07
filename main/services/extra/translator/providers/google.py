@@ -24,7 +24,7 @@ class GoogleTranslateProvider(BaseTranslationProvider):
             }
         )
 
-    async def detect(self, text: str, proxy: str | None = None) -> str:
+    async def detect(self, text: str, proxy: str | None = None) -> str:  # type: ignore
         freq = self._package_rpc(text)
         r: str = await self._make_request(  # type: ignore
             url=self.full_url,
@@ -39,7 +39,7 @@ class GoogleTranslateProvider(BaseTranslationProvider):
                 response = list(json.loads(response[0][2]))
                 return response[0][2]
 
-    async def _translate(
+    async def _translate(  # type: ignore
         self, text: str, source: str, target: str, proxy: str | None
     ) -> str:
         if source == Language.AUTO:

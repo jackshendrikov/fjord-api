@@ -26,7 +26,9 @@ class BasicAuthService:
         """
 
         logger.info(f"Getting user: {credentials.username}")
-        return await self._users_repo.find_user_by_username(username=credentials.username)
+        return await self._users_repo.find_user_by_username(
+            username=credentials.username
+        )
 
     async def login_user(self, user: UserLogin) -> UserToken:
         """
@@ -46,7 +48,9 @@ class BasicAuthService:
         """
 
         logger.info(f"Try to find user: {user_create.username}")
-        db_user = self._users_repo.find_user_by_username(username=user_create.username)
+        db_user = await self._users_repo.find_user_by_username(
+            username=user_create.username
+        )
         if db_user:
             raise UserAlreadyExistException(
                 message=f"User with username: `{user_create.username}` already exists",

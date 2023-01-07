@@ -4,7 +4,7 @@ flake8
 isort
 mypy
 
-pre-commit==2.20.0
+pre-commit==2.21.0
 pytest
 pytest-cov==3.0.0
 pytest-dependency==0.5.1

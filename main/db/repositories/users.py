@@ -23,6 +23,7 @@ class BaseUsersRepository(BaseMongoRepository):
 
         query = {"username": username}
         user = await self.connection.find_one(filter=query)
+        print(user)
         return UserInDB(**user) if user else None
 
 
