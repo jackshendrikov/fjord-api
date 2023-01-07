@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Query
 from main.const.common import Language
 from main.const.translator import Provider
 from main.core.config import get_app_settings
+from main.core.dependencies import basic_security
 from main.schemas.common import Response
 from main.schemas.translation import (
     DetectionIn,
@@ -13,7 +14,7 @@ from main.schemas.translation import (
 from main.services.common.translation import TranslationService
 
 settings = get_app_settings()
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(basic_security)])
 
 
 @router.get("/translate", response_model=Response[TranslationOut])

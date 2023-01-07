@@ -55,6 +55,24 @@ class PoolEmptyException(BaseInternalException):
     """
 
 
+class UserAlreadyExistException(BaseInternalException):
+    """
+    Exception raised when user try to log in with invalid username.
+    """
+
+
+class InvalidUserCredentialsException(BaseInternalException):
+    """
+    Exception raised when user try to log in with invalid credentials.
+    """
+
+
+class UserNotFoundException(BaseInternalException):
+    """
+    Exception raised when user try to register with already exist username.
+    """
+
+
 def add_internal_exception_handler(app: FastAPI) -> None:
     """
     Handle all internal exceptions.

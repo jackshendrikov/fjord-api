@@ -8,6 +8,7 @@ from starlette.responses import StreamingResponse
 from main.const.common import GOOGLE_SHEET_HOST, GOOGLE_SPREADSHEET_ID_LEN, Language
 from main.const.translator import Provider
 from main.core.config import get_app_settings
+from main.core.dependencies import basic_security
 from main.core.exceptions import InvalidSheetException
 from main.schemas.common import Response
 from main.schemas.tasks import (
@@ -20,7 +21,7 @@ from main.services.tasks import TranslationTasksService
 from main.utils.tasks import gen_export_sheet_url
 
 settings = get_app_settings()
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(basic_security)])
 
 
 @router.get("", response_model=Response[TranslationTasksList])
