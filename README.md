@@ -188,11 +188,6 @@ If necessary, you can download the translations attached to the original Google 
     MAX_CONCURRENT_TASKS=<max-concurrent-tasks>
     RUN_BACKGROUND_TASKS=<1|0>
     SCHEDULER_TASK_INTERVAL=<seconds-interval>
-
-    GRAYLOG_HOST=<graylog-host>
-    GRAYLOG_INPUT_PORT=<graylog-port>
-
-    SENTRY_DSN=<sentry-dsn>
 	```
 
 * Export path to Environment Variables:
@@ -392,7 +387,7 @@ fjord-api
 ├── requirements-prod.txt               # pinned prod dependencies
 ├── requirements.txt                    # pinned app dependencies
 ├── setup.cfg                           # linter config file
-└── version.py                          # app version file                      # app version file
+└── version.py                          # app version file
 ```
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
