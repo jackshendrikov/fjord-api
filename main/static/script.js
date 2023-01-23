@@ -6,12 +6,7 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 const songs = [
 	'VLsSJyrA1WE',
-	'Hkg8uiRadpM',
-	'KKGlCPbdnGE',
-	'xn7ZEctSYSw',
-	'Cy44ocuoWhE',
-	'fZgAA0T51Rc',
-	'zEv5xrIjIMo',
+	'pQ8TlLsY93M',
 ]
 const random = Math.floor(Math.random() * songs.length);
 
