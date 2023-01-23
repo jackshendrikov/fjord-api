@@ -395,7 +395,6 @@ fjord-api
 <h2 align="center" id="stack">📚 Stack</h2>
 
 - <img width=3% src="https://cdn.worldvectorlogo.com/logos/fastapi.svg"> <b><a href="https://fastapi.tiangolo.com/">&nbsp;FastAPI</a></b>
-- <img width=3% src="https://upload.wikimedia.org/wikipedia/commons/0/00/Kubernetes_%28container_engine%29.png"> <b><a href="https://github.com/kubernetes-client/python/">&nbsp;Kubernetes</a></b>
 - <img width=3% src="https://docs.aiohttp.org/en/v3.7.4/_static/aiohttp-icon-128x128.png"> <b><a href="https://docs.aiohttp.org/en/v3.7.4/">&nbsp;aiohttp</a></b>
 - <img width=3% src="https://avatars.githubusercontent.com/u/1529926?s=200&v=4"> <b><a href="https://aioredis.readthedocs.io/en/latest/">&nbsp;aioredis</a></b>
 - <img width=3% src="https://avatars.githubusercontent.com/u/45742130?v=4"> <b><a href="https://piccolo-orm.com/">&nbsp;Piccolo</a></b>
