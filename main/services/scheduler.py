@@ -60,9 +60,9 @@ class TranslationTaskScheduler:
             task = queued_tasks.pop()
             logger.info(f"Starting to work with `{task.task_id}` task.")
 
-            # await self._tasks_repository.update_task_field(
-            #     task_id=task.task_id, state=TaskState.consumed
-            # )
+            await self._tasks_repository.update_task_field(
+                task_id=task.task_id, state=TaskState.consumed
+            )
             logger.info(
                 f"Task state updated to {TaskState.consumed} for task: {task.task_id}"
             )
@@ -73,9 +73,9 @@ class TranslationTaskScheduler:
                 self._notifier.send_notification(
                     error=NotifierError(task_id=task.task_id, error_msg=str(exc))
                 )
-                # await self._tasks_repository.update_task_field(
-                #     task_id=task.task_id, state=TaskState.error
-                # )
+                await self._tasks_repository.update_task_field(
+                    task_id=task.task_id, state=TaskState.error
+                )
                 return
 
             await self._tasks_repository.update_task_field(
