@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py311']
 skip-magic-trailing-comma = true
 include = '\.pyi?$'
 exclude = '''
@@ -29,9 +29,7 @@ skip_glob = ['.ve', '.git']
 
 [tool.coverage.run]
 omit = [
-    "main/services/scrapyd.py",
     "main/cli.py",
-    "main/core/integrations.py",
     "main/core/logging.py",
     "main/core/dependencies.py",
     "main/api/background.py"

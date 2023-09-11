@@ -4,11 +4,11 @@ flake8
 isort
 mypy
 
-pre-commit==2.21.0
+pre-commit==3.4.0
 pytest
-pytest-cov==3.0.0
+pytest-cov==4.1.0
 pytest-dependency==0.5.1
 pytest-lazy-fixture
-pytest-mock==3.6.1
-pytest-order==1.0.0
-types-PyYAML==6.0.9
+pytest-mock==3.11.1
+pytest-order==1.1.0
+types-PyYAML==6.0.12.11

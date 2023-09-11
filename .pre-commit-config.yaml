@@ -13,7 +13,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies:
@@ -38,18 +38,18 @@ repos:
         entry: .github/hooks/update_version.sh
 
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 23.9.1
     hooks:
       - id: black
         language_version: python
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.10.1
     hooks:
       - id: pyupgrade
         args: [ --py311-plus ]

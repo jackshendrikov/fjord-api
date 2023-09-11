@@ -7,7 +7,6 @@ from main.services.extra.proxynator.crawlers import __all__ as crawler_cls
 
 
 class Proxynator:
-
     _proxies_repository: ProxyPoolRepository = ProxyPoolRepository()
     _crawlers = [cls() for cls in crawler_cls]
 

@@ -199,7 +199,7 @@ If necessary, you can download the translations attached to the original Google 
 * Run following commands to make migrations anc create admin user:
 
 	```bash
-	piccolo migrations forwards user
+	piccolo migrations forwards all
     piccolo user create
 	```
 
