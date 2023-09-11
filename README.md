@@ -204,7 +204,7 @@ If necessary, you can download the translations attached to the original Google 
 * Run following commands to make migrations anc create admin user:
 
 	```bash
-	piccolo migrations forwards user
+	piccolo migrations forwards all
     piccolo user create
 	```
 
@@ -392,7 +392,7 @@ fjord-api
 ├── requirements-prod.txt               # pinned prod dependencies
 ├── requirements.txt                    # pinned app dependencies
 ├── setup.cfg                           # linter config file
-└── version.py                          # app version file                      # app version file
+└── version.py                          # app version file
 ```
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)

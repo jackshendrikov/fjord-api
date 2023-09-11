@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from aioredis import ConnectionError, Redis, from_url
 from motor.motor_asyncio import AsyncIOMotorClient
+from redis.asyncio import ConnectionError, Redis, from_url
 
 from main.core.config import get_app_settings
 from main.core.logging import logger

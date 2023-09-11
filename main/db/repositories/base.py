@@ -1,5 +1,5 @@
-from aioredis import Redis
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+from redis.asyncio import Redis
 
 from main.db.clients import Client, client_facade
 from main.db.errors import RepositoryDoesNotInit
