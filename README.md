@@ -418,7 +418,7 @@ fjord-api
 <!-- markdownlint-disable -->
 <table align="center">
   <tr>
-   <td align="center"><a href="https://github.com/Russkiy-Voyennyy-Korabl-Idi-Nakhuy"><img src="https://avatars.githubusercontent.com/u/43554620??v=4?s=200" width="200px;" alt="Jack Shendrikov"/><br/><sub><b>👑 Jack Shendrikov 👑</b></sub></a></td>
+   <td align="center"><a href="https://github.com/jackshendrikov"><img src="https://avatars.githubusercontent.com/u/43554620??v=4?s=200" width="200px;" alt="Jack Shendrikov"/><br/><sub><b>👑 Jack Shendrikov 👑</b></sub></a></td>
   </tr>
 </table>
 
